@@ -31,12 +31,22 @@ export interface DescriptorOption {
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost'
 export type ButtonSize = 'sm' | 'md' | 'lg'
 
+export type ToastType = 'success' | 'error' | 'warning' | 'info'
+
+export interface Toast {
+  id: string
+  type: ToastType
+  message: string
+  duration?: number
+}
+
 export interface AssetStore {
   images: AssetImage[]
   groups: ProductGroup[]
   hasSeenOnboarding: boolean
   collapsedGroups: string[]
   uploadZoneCollapsed: boolean
+  toasts: Toast[]
 
   addImages: (files: File[]) => Promise<void>
   removeImage: (id: string) => void
@@ -51,6 +61,9 @@ export interface AssetStore {
   setOnboardingComplete: () => void
   toggleGroupCollapse: (groupId: string) => void
   setUploadZoneCollapsed: (collapsed: boolean) => void
+
+  addToast: (type: ToastType, message: string, duration?: number) => void
+  removeToast: (id: string) => void
 
   getResolvedFilenames: () => ResolvedFilename[]
   getGroupImages: (groupId: string) => AssetImage[]

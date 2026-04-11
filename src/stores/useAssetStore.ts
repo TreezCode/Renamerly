@@ -1,8 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { AssetStore } from '@/types'
-import type { Toast } from '@/components/ui/Toast'
-import type { AssetImage, ResolvedFilename } from '@/types'
+import type { AssetStore, AssetImage, ResolvedFilename, ToastType } from '@/types'
 import { generateFilename, isFilenameComplete, getFileExtension } from '@/lib/filename'
 import { MAX_FREE_IMAGES, THUMBNAIL_MAX_SIZE } from '@/lib/constants'
 import { validateImageFile, getTotalFileSize } from '@/lib/file-validation'
@@ -55,6 +53,7 @@ export const useAssetStore = create<AssetStore>()(
       hasSeenOnboarding: false,
       collapsedGroups: [],
       uploadZoneCollapsed: false,
+      toasts: [],
 
   addImages: async (files: File[]) => {
     const { images } = get()
@@ -87,17 +86,17 @@ export const useAssetStore = create<AssetStore>()(
     if (duplicates.length > 0) {
       const duplicateMessage = duplicates.length === 1
         ? `"${duplicates[0]}" has already been uploaded`
-        : `${duplicates.length} duplicate file(s) skipped:\n\n${duplicates.slice(0, 5).join('\n')}${duplicates.length > 5 ? '\n\n...and more' : ''}`
+        : `${duplicates.length} duplicate file(s) skipped`
       
-      alert(`⚠️ Duplicate Files Detected\n\n${duplicateMessage}`)
+      get().addToast('warning', duplicateMessage, 4000)
     }
 
     if (errors.length > 0) {
       const errorMessage = errors.length === 1
         ? errors[0]
-        : `${errors.length} file(s) rejected:\n\n${errors.slice(0, 5).join('\n')}${errors.length > 5 ? '\n\n...and more' : ''}`
+        : `${errors.length} file(s) failed validation`
       
-      alert(`⚠️ File Validation Error\n\n${errorMessage}`)
+      get().addToast('error', errorMessage, 6000)
     }
 
     if (validatedFiles.length === 0) {
@@ -256,6 +255,19 @@ export const useAssetStore = create<AssetStore>()(
 
   setUploadZoneCollapsed: (collapsed: boolean) => {
     set({ uploadZoneCollapsed: collapsed })
+  },
+
+  addToast: (type: ToastType, message: string, duration = 5000) => {
+    const id = Math.random().toString(36).substring(2, 9)
+    set((state) => ({
+      toasts: [...state.toasts, { id, type, message, duration }],
+    }))
+  },
+
+  removeToast: (id: string) => {
+    set((state) => ({
+      toasts: state.toasts.filter((toast) => toast.id !== id),
+    }))
   },
 
   isExportReady: (): boolean => {

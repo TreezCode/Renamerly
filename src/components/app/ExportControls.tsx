@@ -12,6 +12,7 @@ export function ExportControls() {
   const images = useAssetStore((state) => state.images)
   const groups = useAssetStore((state) => state.groups)
   const isExportReady = useAssetStore((state) => state.isExportReady)
+  const addToast = useAssetStore((state) => state.addToast)
 
   const [isExporting, setIsExporting] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -50,8 +51,10 @@ export function ExportControls() {
     })
 
     if (duplicates.length > 0) {
-      alert(
-        `⚠️ Duplicate filenames detected!\n\nThe following filenames appear multiple times:\n\n${duplicates.map((f) => `• ${f}`).join('\n')}\n\nPlease ensure each image has a unique combination of SKU and descriptor.\n\nTip: Use different SKUs for different products, or different descriptors for the same product.`
+      addToast(
+        'error',
+        `Duplicate filenames detected! ${duplicates.length} filename(s) appear multiple times. Each image needs a unique SKU + descriptor combination.`,
+        8000
       )
       return
     }
@@ -75,11 +78,13 @@ export function ExportControls() {
         (percent) => setProgress(Math.round(percent))
       )
 
+      addToast('success', 'Export complete! Check your downloads.', 4000)
       setShowSuccess(true)
       setTimeout(() => setShowSuccess(false), 3000)
     } catch (error) {
       console.error('Export failed:', error)
-      alert('Export failed. Please try again.')
+      const errorMessage = error instanceof Error ? error.message : 'Export failed. Please try again.'
+      addToast('error', errorMessage, 6000)
     } finally {
       setIsExporting(false)
       setProgress(0)
@@ -133,7 +138,7 @@ export function ExportControls() {
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
-          className="mt-4 h-2 bg-gradient-to-r from-[#915eff] to-[#00d4ff] rounded-full"
+          className="mt-4 h-2 bg-linear-to-r from-treez-purple to-treez-cyan rounded-full"
         />
       )}
 

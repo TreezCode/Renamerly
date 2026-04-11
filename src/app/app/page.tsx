@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useAssetStore } from '@/stores/useAssetStore'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { AppToolbar } from '@/components/app/AppToolbar'
 import { UploadZone } from '@/components/app/UploadZone'
 import { GroupManager } from '@/components/app/GroupManager'
@@ -27,7 +28,7 @@ export default function AppPage() {
   }, [hasImages, uploadZoneCollapsed, setUploadZoneCollapsed])
 
   return (
-    <>
+    <ErrorBoundary>
       <OnboardingModal />
       
       <main className="min-h-screen py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
@@ -111,6 +112,6 @@ export default function AppPage() {
           )}
         </motion.div>
       </main>
-    </>
+    </ErrorBoundary>
   )
 }

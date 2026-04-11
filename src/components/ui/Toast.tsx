@@ -3,15 +3,7 @@
 import { useEffect } from 'react'
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-
-export type ToastType = 'success' | 'error' | 'warning' | 'info'
-
-export interface Toast {
-  id: string
-  type: ToastType
-  message: string
-  duration?: number
-}
+import type { Toast, ToastType } from '@/types'
 
 interface ToastProps {
   toast: Toast
