@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Inter, Space_Grotesk } from "next/font/google"
+import { Analytics } from "@vercel/analytics/react"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import "./globals.css"
@@ -42,6 +43,7 @@ export default function RootLayout({
         <Header />
         <main className="flex-1 pt-16">{children}</main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   )
