@@ -71,11 +71,8 @@ export function CompactImageTile({ image, onClick }: CompactImageTileProps) {
 
       <button
         onClick={handleRemove}
-        className="absolute top-1 right-1 w-6 h-6 rounded-full 
-          bg-error/80 hover:bg-error 
-          flex items-center justify-center
-          opacity-0 group-hover:opacity-100 
-          transition-all duration-200
+        aria-label={`Remove ${image.originalName}`}
+        className="absolute top-2 right-2 w-6 h-6 rounded-full bg-error/20 hover:bg-error/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200
           hover:scale-110"
         title="Remove image"
       >

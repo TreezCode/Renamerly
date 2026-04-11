@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
 import { ToastProvider } from "@/components/ui/ToastProvider"
+import { SkipToContent } from "@/components/ui/SkipToContent"
 import "./globals.css"
 
 const inter = Inter({
@@ -119,8 +120,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col font-sans">
+        <SkipToContent />
         <Header />
-        <main className="flex-1 pt-16">{children}</main>
+        <main id="main-content" className="flex-1 pt-16">{children}</main>
         <Footer />
         <ToastProvider />
         <Analytics />
