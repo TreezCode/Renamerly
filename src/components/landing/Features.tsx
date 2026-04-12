@@ -1,14 +1,14 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Lock, Eye, Zap, Clock, Layers, MousePointerClick } from 'lucide-react'
+import { Lock, Eye, Zap, Clock, Layers, MousePointerClick, Camera, Hash } from 'lucide-react'
 import { landingCopy } from '@/lib/landing-copy'
 
 const icons: Record<string, typeof Lock> = {
   'Smart Descriptor Locking': Lock,
+  'RAW File Support': Camera,
+  'Auto-Iteration Presets': Hash,
   'Instant Preview': Eye,
-  'Zero Learning Curve': Zap,
-  'Actually Saves Time': Clock,
   'Bulk Operations': Layers,
   'No Signup Required': MousePointerClick,
 }

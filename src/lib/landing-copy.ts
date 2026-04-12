@@ -1,13 +1,13 @@
 export const landingCopy = {
   hero: {
-    badge: 'Built for Shopify, Etsy & small business sellers',
-    headline: 'Stop wasting hours renaming product images.',
+    badge: 'Built for E-commerce & Photography Professionals',
+    headline: 'Stop wasting hours renaming images.',
     subheadline:
-      'Turn messy files like IMG_2045.jpg into clean, store-ready names in seconds.',
+      'Turn messy files like IMG_2045.jpg into clean, professional names in seconds. Works with RAW files too.',
     bullets: [
       'Bulk rename hundreds of images instantly',
-      'Built for Shopify, Etsy, and small business workflows',
-      'No setup. No learning curve. Just upload and go',
+      'RAW file support (CR2, NEF, ARW, DNG, etc.)',
+      'Auto-iteration presets for sequential naming',
     ],
     primaryCta: 'Try It Free',
     secondaryCta: 'See How It Works',
@@ -61,23 +61,23 @@ export const landingCopy = {
 
   features: {
     heading: 'Built for real workflows, not generic tools.',
-    subheading: 'Everything you need to rename product images professionally',
+    subheading: 'Everything you need to rename images professionally — from e-commerce to photography',
     items: [
       {
         title: 'Smart Descriptor Locking',
         description: 'Never assign the same label twice by mistake',
       },
       {
+        title: 'RAW File Support',
+        description: 'Upload CR2, NEF, ARW, DNG and other RAW formats — previews extracted automatically',
+      },
+      {
+        title: 'Auto-Iteration Presets',
+        description: 'Sequential numbering (01, 02, 03) or alphabetic (A, B, C) for fast batch naming',
+      },
+      {
         title: 'Instant Preview',
         description: 'See final filenames update in real time',
-      },
-      {
-        title: 'Zero Learning Curve',
-        description: 'If you can drag files, you can use AssetFlow',
-      },
-      {
-        title: 'Actually Saves Time',
-        description: 'Turn hours of repetitive work into minutes',
       },
       {
         title: 'Bulk Operations',
@@ -93,26 +93,26 @@ export const landingCopy = {
   audience: {
     heading: 'Perfect for teams of one.',
     subheading:
-      'Whether you run a store, manage client assets, or upload product photos every week, AssetFlow keeps your files clean and consistent.',
+      'Whether you run a store, shoot weddings, or manage client assets, AssetFlow keeps your files clean and consistent.',
     personas: [
       {
         title: 'Shopify store owners',
-        description: 'Keep product listings organized and professional',
+        description: 'SKU-based naming for product listings — keeps your store organized and professional',
       },
       {
         title: 'Etsy sellers',
-        description: 'Streamline your photo workflow for faster listings',
+        description: 'Streamline your photo workflow for faster listings with smart descriptors',
       },
       {
         title: 'Product photographers',
-        description: 'Deliver clean, labeled assets to every client',
+        description: 'Deliver clean, sequentially-named assets to clients — works with RAW files',
       },
       {
         title: 'Freelancers',
-        description: 'Manage client assets without the manual headache',
+        description: 'Auto-iteration naming for shoots, projects, or client deliverables',
       },
     ],
-    reinforcement: 'If you deal with product images, this tool pays for itself fast.',
+    reinforcement: 'E-commerce or photography — this tool adapts to your workflow.',
   },
 
   pricing: {
@@ -126,11 +126,11 @@ export const landingCopy = {
         description: 'Free forever',
         features: [
           'Up to 20 images per session',
-          'Full core workflow',
+          'RAW file support (preview extraction)',
+          'Auto-iteration presets (01, 02, A, B, etc.)',
+          'SKU-based or sequential naming',
           'Drag-and-drop upload',
-          'Live filename preview',
           'ZIP export',
-          'No signup required',
         ],
         cta: 'Try It Free',
       },

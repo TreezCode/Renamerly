@@ -3,7 +3,7 @@
 import { Upload } from 'lucide-react'
 import { useDropzone } from '@/hooks/useDropzone'
 import { useAssetStore } from '@/stores/useAssetStore'
-import { MAX_FREE_IMAGES } from '@/lib/constants'
+import { MAX_FREE_IMAGES, ACCEPTED_EXTENSIONS } from '@/lib/constants'
 
 export function UploadZone() {
   const images = useAssetStore((state) => state.images)
@@ -56,7 +56,7 @@ export function UploadZone() {
         ref={inputRef}
         type="file"
         multiple
-        accept="image/jpeg,image/png,image/webp,image/gif"
+        accept={ACCEPTED_EXTENSIONS.join(',')}
         onChange={handleFileSelect}
         className="hidden"
       />
@@ -83,7 +83,10 @@ export function UploadZone() {
           </h3>
           <p className="text-gray-400 mb-1">or click to browse</p>
           <p className="text-sm text-gray-500">
-            Supports JPG, PNG, WebP, GIF (max {MAX_FREE_IMAGES} images)
+            Supports JPG, PNG, WebP, GIF, RAW (CR2, NEF, ARW, DNG, etc.)
+          </p>
+          <p className="text-xs text-gray-600">
+            Max {MAX_FREE_IMAGES} images in free tier
           </p>
         </div>
       )}
