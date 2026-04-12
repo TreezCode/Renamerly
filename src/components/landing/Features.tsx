@@ -58,19 +58,22 @@ export function Features() {
                   hidden: { opacity: 0, scale: 0.9 },
                   show: { opacity: 1, scale: 1 },
                 }}
-                className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 hover:bg-white/10 hover:border-treez-purple/30 hover:shadow-lg hover:shadow-treez-purple/20 hover:scale-105 transition-all duration-300"
+                className="group relative overflow-hidden bg-white/2 backdrop-blur-xl backdrop-saturate-120 border border-white/10 rounded-xl p-6 shadow-lg shadow-black/20 hover:bg-white/4 hover:border-treez-purple/30 hover:shadow-xl hover:shadow-treez-purple/20 hover:scale-[1.03] transition-all duration-500"
               >
-                <div className="flex items-start gap-4">
+                {/* Inner glow accent on hover */}
+                <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-linear-to-br from-treez-purple/5 via-transparent to-treez-cyan/5" />
+                
+                <div className="relative flex items-start gap-4">
                   <div className="shrink-0">
-                    <div className="w-12 h-12 rounded-lg bg-linear-to-br from-treez-purple/20 to-treez-cyan/20 flex items-center justify-center group-hover:from-treez-purple/30 group-hover:to-treez-cyan/30 transition-all duration-300">
-                      <Icon className="w-6 h-6 text-treez-cyan group-hover:text-treez-purple transition-colors duration-300" />
+                    <div className="w-12 h-12 rounded-lg bg-linear-to-br from-treez-purple/20 to-treez-cyan/20 flex items-center justify-center group-hover:from-treez-purple/30 group-hover:to-treez-cyan/30 group-hover:shadow-lg group-hover:shadow-treez-cyan/20 transition-all duration-500">
+                      <Icon className="w-6 h-6 text-treez-cyan group-hover:text-treez-purple group-hover:scale-110 transition-all duration-500" />
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-treez-cyan transition-colors duration-300">
+                    <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-treez-cyan transition-colors duration-500">
                       {feature.title}
                     </h3>
-                    <p className="text-sm text-gray-400">{feature.description}</p>
+                    <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-500">{feature.description}</p>
                   </div>
                 </div>
               </motion.div>

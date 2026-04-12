@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/Button'
 
 export function ExportControls() {
   const images = useAssetStore((state) => state.images)
-  const groups = useAssetStore((state) => state.groups)
   const isExportReady = useAssetStore((state) => state.isExportReady)
   const addToast = useAssetStore((state) => state.addToast)
 
@@ -18,24 +17,25 @@ export function ExportControls() {
   const [progress, setProgress] = useState(0)
   const [showSuccess, setShowSuccess] = useState(false)
 
-  const ready = isExportReady()
   const totalImages = images.length
-  const completeImages = images.filter((img) => {
-    const group = groups.find((g) => g.id === img.groupId)
-    if (!group?.sku) return false
+  const readyImages = images.filter((img) => {
+    if (!img.sku) return false
     const descriptor = img.descriptor === 'custom' ? (img.customDescriptor || '') : (img.descriptor || '')
     return descriptor.length > 0
-  }).length
+  })
+  const completeImages = readyImages.length
+  const allReady = isExportReady()
+  const canExport = completeImages > 0
 
   const handleExport = async () => {
-    if (!ready || isExporting) return
+    if (!canExport || isExporting) return
 
     const filenameMap = new Map<string, number>()
     const duplicates: string[] = []
 
-    images.forEach((image) => {
-      const group = groups.find((g) => g.id === image.groupId)
-      const sku = group?.sku || ''
+    // Only check ready images for duplicates
+    readyImages.forEach((image) => {
+      const sku = image.sku || ''
       const descriptor = image.descriptor === 'custom'
         ? (image.customDescriptor || '')
         : (image.descriptor || '')
@@ -64,11 +64,11 @@ export function ExportControls() {
     setShowSuccess(false)
 
     try {
+      // Only export ready images
       await exportAsZip(
-        images,
+        readyImages,
         (image) => {
-          const group = groups.find((g) => g.id === image.groupId)
-          const sku = group?.sku || ''
+          const sku = image.sku || ''
           const descriptor = image.descriptor === 'custom'
             ? (image.customDescriptor || '')
             : (image.descriptor || '')
@@ -78,7 +78,7 @@ export function ExportControls() {
         (percent) => setProgress(Math.round(percent))
       )
 
-      addToast('success', 'Export complete! Check your downloads.', 4000)
+      addToast('success', `${readyImages.length} image(s) exported successfully!`, 4000)
       setShowSuccess(true)
       setTimeout(() => setShowSuccess(false), 3000)
     } catch (error) {
@@ -100,7 +100,7 @@ export function ExportControls() {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
           <p className="text-white font-medium mb-1">
-            {ready ? (
+            {allReady ? (
               <span className="flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5 text-success" />
                 All images ready to export!
@@ -109,9 +109,14 @@ export function ExportControls() {
               `${completeImages} of ${totalImages} images ready`
             )}
           </p>
-          {!ready && (
+          {!allReady && completeImages > 0 && (
             <p className="text-sm text-gray-400">
-              Complete all SKUs and descriptors to export
+              You can export ready images now, or finish configuring all images
+            </p>
+          )}
+          {completeImages === 0 && (
+            <p className="text-sm text-gray-400">
+              Assign SKUs and descriptors to export images
             </p>
           )}
         </div>
@@ -120,7 +125,7 @@ export function ExportControls() {
           variant="primary"
           size="lg"
           onClick={handleExport}
-          disabled={!ready || isExporting}
+          disabled={!canExport || isExporting}
           className="gap-2 whitespace-nowrap"
         >
           {isExporting ? (
@@ -128,7 +133,7 @@ export function ExportControls() {
           ) : (
             <>
               <Download className="w-5 h-5" />
-              Export ZIP
+              {allReady ? 'Export All' : `Export Ready (${completeImages})`}
             </>
           )}
         </Button>

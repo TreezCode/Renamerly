@@ -4,15 +4,9 @@ export interface AssetImage {
   thumbnail: string
   originalName: string
   extension: string
-  groupId: string | null
+  sku: string | null
   descriptor: string | null
   customDescriptor: string | null
-}
-
-export interface ProductGroup {
-  id: string
-  name: string
-  sku: string
 }
 
 export interface ResolvedFilename {
@@ -28,7 +22,7 @@ export interface DescriptorOption {
   disabled: boolean
 }
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost'
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
 export type ButtonSize = 'sm' | 'md' | 'lg'
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info'
@@ -40,33 +34,49 @@ export interface Toast {
   duration?: number
 }
 
+export interface ConfirmDialogState {
+  open: boolean
+  title: string
+  description: string
+  confirmLabel?: string
+  cancelLabel?: string
+  variant?: 'danger' | 'warning' | 'info'
+  onConfirm: () => void
+}
+
 export interface AssetStore {
   images: AssetImage[]
-  groups: ProductGroup[]
   hasSeenOnboarding: boolean
-  collapsedGroups: string[]
+  collapsedSkus: string[]
   uploadZoneCollapsed: boolean
+  selectedImageIds: string[]
   toasts: Toast[]
+  confirmDialog: ConfirmDialogState | null
 
   addImages: (files: File[]) => Promise<void>
   removeImage: (id: string) => void
-  createGroup: (name: string) => void
-  deleteGroup: (id: string) => void
-  assignImageToGroup: (imageId: string, groupId: string) => void
-  setGroupSku: (groupId: string, sku: string) => void
+  setImageSku: (imageId: string, sku: string) => void
+  setBulkSku: (imageIds: string[], sku: string) => void
   setImageDescriptor: (imageId: string, descriptor: string) => void
   setCustomDescriptor: (imageId: string, text: string) => void
   reset: () => void
 
   setOnboardingComplete: () => void
-  toggleGroupCollapse: (groupId: string) => void
+  toggleSkuCollapse: (sku: string) => void
   setUploadZoneCollapsed: (collapsed: boolean) => void
+  toggleImageSelection: (imageId: string) => void
+  selectAllImages: () => void
+  selectAllInContext: (sku?: string) => void
+  clearSelection: () => void
 
   addToast: (type: ToastType, message: string, duration?: number) => void
   removeToast: (id: string) => void
 
+  showConfirmDialog: (config: Omit<ConfirmDialogState, 'open'>) => void
+  closeConfirmDialog: () => void
+
   getResolvedFilenames: () => ResolvedFilename[]
-  getGroupImages: (groupId: string) => AssetImage[]
-  getUsedDescriptors: (groupId: string) => string[]
+  getImagesBySku: (sku: string) => AssetImage[]
+  getUsedDescriptors: (sku: string) => string[]
   isExportReady: () => boolean
 }

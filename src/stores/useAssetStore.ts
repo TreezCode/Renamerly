@@ -49,11 +49,12 @@ export const useAssetStore = create<AssetStore>()(
   persist(
     (set, get) => ({
       images: [],
-      groups: [],
       hasSeenOnboarding: false,
-      collapsedGroups: [],
+      collapsedSkus: [],
       uploadZoneCollapsed: false,
+      selectedImageIds: [],
       toasts: [],
+      confirmDialog: null,
 
   addImages: async (files: File[]) => {
     const { images } = get()
@@ -113,7 +114,7 @@ export const useAssetStore = create<AssetStore>()(
             thumbnail,
             originalName: file.name,
             extension: getFileExtension(file.name),
-            groupId: null,
+            sku: null,
             descriptor: null,
             customDescriptor: null,
           }
@@ -142,41 +143,24 @@ export const useAssetStore = create<AssetStore>()(
     set((state) => ({ images: state.images.filter((img) => img.id !== id) }))
   },
 
-  createGroup: (name: string) => {
-    const group = {
-      id: crypto.randomUUID(),
-      name,
-      sku: '',
-    }
-    set((state) => ({ groups: [...state.groups, group] }))
-  },
-
-  deleteGroup: (id: string) => {
-    set((state) => ({
-      groups: state.groups.filter((g) => g.id !== id),
-      images: state.images.map((img) =>
-        img.groupId === id
-          ? { ...img, groupId: null, descriptor: null, customDescriptor: null }
-          : img
-      ),
-    }))
-  },
-
-  assignImageToGroup: (imageId: string, groupId: string) => {
+  setImageSku: (imageId: string, sku: string) => {
     set((state) => ({
       images: state.images.map((img) =>
         img.id === imageId
-          ? { ...img, groupId }
+          ? { ...img, sku: sku || null }
           : img
       ),
     }))
   },
 
-  setGroupSku: (groupId: string, sku: string) => {
+  setBulkSku: (imageIds: string[], sku: string) => {
     set((state) => ({
-      groups: state.groups.map((g) =>
-        g.id === groupId ? { ...g, sku } : g
+      images: state.images.map((img) =>
+        imageIds.includes(img.id)
+          ? { ...img, sku: sku || null }
+          : img
       ),
+      selectedImageIds: [], // Clear selection after bulk operation
     }))
   },
 
@@ -201,14 +185,13 @@ export const useAssetStore = create<AssetStore>()(
   reset: () => {
     const { images } = get()
     cleanupThumbnails(images)
-    set({ images: [], groups: [] })
+    set({ images: [], selectedImageIds: [] })
   },
 
   getResolvedFilenames: (): ResolvedFilename[] => {
-    const { images, groups } = get()
+    const { images } = get()
     return images.map((img) => {
-      const group = groups.find((g) => g.id === img.groupId)
-      const sku = group?.sku ?? ''
+      const sku = img.sku ?? ''
       const descriptor = img.descriptor === 'custom'
         ? (img.customDescriptor ?? '')
         : (img.descriptor ?? '')
@@ -225,15 +208,15 @@ export const useAssetStore = create<AssetStore>()(
     })
   },
 
-  getGroupImages: (groupId: string): AssetImage[] => {
+  getImagesBySku: (sku: string): AssetImage[] => {
     const { images } = get()
-    return images.filter((img) => img.groupId === groupId)
+    return images.filter((img) => img.sku === sku)
   },
 
-  getUsedDescriptors: (groupId: string): string[] => {
+  getUsedDescriptors: (sku: string): string[] => {
     const { images } = get()
     return images
-      .filter((img) => img.groupId === groupId && img.descriptor !== null)
+      .filter((img) => img.sku === sku && img.descriptor !== null)
       .map((img) => {
         if (img.descriptor === 'custom') return img.customDescriptor ?? ''
         return img.descriptor ?? ''
@@ -245,16 +228,65 @@ export const useAssetStore = create<AssetStore>()(
     set({ hasSeenOnboarding: true })
   },
 
-  toggleGroupCollapse: (groupId: string) => {
+  toggleSkuCollapse: (sku: string) => {
     set((state) => ({
-      collapsedGroups: state.collapsedGroups.includes(groupId)
-        ? state.collapsedGroups.filter((id) => id !== groupId)
-        : [...state.collapsedGroups, groupId],
+      collapsedSkus: state.collapsedSkus.includes(sku)
+        ? state.collapsedSkus.filter((s) => s !== sku)
+        : [...state.collapsedSkus, sku],
     }))
   },
 
   setUploadZoneCollapsed: (collapsed: boolean) => {
     set({ uploadZoneCollapsed: collapsed })
+  },
+
+  toggleImageSelection: (imageId: string) => {
+    const { images, selectedImageIds } = get()
+    const clickedImage = images.find((img) => img.id === imageId)
+    if (!clickedImage) return
+
+    // If this is the first selection, just add it
+    if (selectedImageIds.length === 0) {
+      set({ selectedImageIds: [imageId] })
+      return
+    }
+
+    // Check if we're switching contexts (SKU group vs no-SKU)
+    const firstSelectedImage = images.find((img) => img.id === selectedImageIds[0])
+    const clickedContext = clickedImage.sku || 'no-sku'
+    const selectedContext = firstSelectedImage?.sku || 'no-sku'
+
+    // If switching contexts, clear old selection and start fresh
+    if (clickedContext !== selectedContext) {
+      set({ selectedImageIds: [imageId] })
+      return
+    }
+
+    // Same context - toggle normally
+    set((state) => ({
+      selectedImageIds: state.selectedImageIds.includes(imageId)
+        ? state.selectedImageIds.filter((id) => id !== imageId)
+        : [...state.selectedImageIds, imageId],
+    }))
+  },
+
+  selectAllImages: () => {
+    const { images } = get()
+    set({ selectedImageIds: images.map((img) => img.id) })
+  },
+
+  selectAllInContext: (sku?: string) => {
+    const { images } = get()
+    // If sku is undefined or null, select all images without SKU
+    // Otherwise, select all images with that specific SKU
+    const contextImages = sku 
+      ? images.filter((img) => img.sku === sku)
+      : images.filter((img) => !img.sku)
+    set({ selectedImageIds: contextImages.map((img) => img.id) })
+  },
+
+  clearSelection: () => {
+    set({ selectedImageIds: [] })
   },
 
   addToast: (type: ToastType, message: string, duration = 5000) => {
@@ -270,16 +302,23 @@ export const useAssetStore = create<AssetStore>()(
     }))
   },
 
+  showConfirmDialog: (config) => {
+    set({ confirmDialog: { ...config, open: true } })
+  },
+
+  closeConfirmDialog: () => {
+    set({ confirmDialog: null })
+  },
+
   isExportReady: (): boolean => {
-    const { images, groups } = get()
+    const { images } = get()
     if (images.length === 0) return false
     return images.every((img) => {
-      const group = groups.find((g) => g.id === img.groupId)
-      if (!group?.sku) return false
+      if (!img.sku) return false
       const descriptor = img.descriptor === 'custom'
         ? (img.customDescriptor ?? '')
         : (img.descriptor ?? '')
-      return isFilenameComplete(group.sku, descriptor)
+      return isFilenameComplete(img.sku, descriptor)
     })
   },
     }),

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 const quickLinks = [
   { name: 'Home', href: '#hero' },
@@ -13,13 +13,32 @@ const quickLinks = [
 
 export function Footer() {
   const pathname = usePathname()
+  const router = useRouter()
   const isLanding = pathname === '/'
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (isLanding && href.startsWith('#')) {
+    if (href.startsWith('#')) {
       e.preventDefault()
-      const id = href.replace('#', '')
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+      
+      if (isLanding) {
+        // On landing page, smooth scroll to section with header offset
+        const id = href.replace('#', '')
+        const element = document.getElementById(id)
+        if (element) {
+          const headerOffset = 64
+          const elementPosition = element.getBoundingClientRect().top
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          })
+        }
+      } else {
+        // On other pages, navigate to landing page with section as query param
+        const section = href.replace('#', '')
+        router.push(`/?scrollTo=${section}`)
+      }
     }
   }
 
@@ -57,7 +76,7 @@ export function Footer() {
               {quickLinks.map((link) => (
                 <a
                   key={link.name}
-                  href={isLanding ? link.href : `/${link.href}`}
+                  href={isLanding ? link.href : '/'}
                   onClick={(e) => handleNavClick(e, link.href)}
                   className="group text-sm text-gray-400 hover:text-treez-cyan transition-colors duration-300 inline-flex items-center gap-2"
                 >

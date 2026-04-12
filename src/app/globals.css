@@ -31,6 +31,37 @@
   /* Fonts */
   --font-sans: var(--font-inter);
   --font-display: var(--font-space-grotesk);
+
+  /* Custom Animations */
+  --animate-slow-spin: slow-spin 60s linear infinite;
+}
+
+@keyframes slow-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Sacred Geometry Animation Utility */
+.animate-slow-spin {
+  animation: slow-spin 60s linear infinite;
+}
+
+/* Skeleton Shimmer Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
 }
 
 body {

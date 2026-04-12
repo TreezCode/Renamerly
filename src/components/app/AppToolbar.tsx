@@ -7,17 +7,26 @@ import { Button } from '@/components/ui/Button'
 
 export function AppToolbar() {
   const images = useAssetStore((state) => state.images)
-  const groups = useAssetStore((state) => state.groups)
   const reset = useAssetStore((state) => state.reset)
+  const showConfirmDialog = useAssetStore((state) => state.showConfirmDialog)
+  const addToast = useAssetStore((state) => state.addToast)
 
   const imageCount = images.length
-  const groupCount = groups.length
+  const uniqueSkus = new Set(images.filter((img) => img.sku).map((img) => img.sku)).size
+  const imagesWithSku = images.filter((img) => img.sku).length
 
   const handleReset = () => {
     if (imageCount === 0) return
-    if (confirm('Start over? This will clear all images and groups.')) {
-      reset()
-    }
+    showConfirmDialog({
+      title: 'Start over?',
+      description: 'This will clear all images and SKUs. This action cannot be undone.',
+      variant: 'danger',
+      confirmLabel: 'Clear Everything',
+      onConfirm: () => {
+        reset()
+        addToast('success', 'Session cleared')
+      },
+    })
   }
 
   const getCountColor = () => {
@@ -37,11 +46,19 @@ export function AppToolbar() {
               {imageCount} / {MAX_FREE_IMAGES}
             </span>
           </div>
-          {groupCount > 0 && (
-            <div>
-              <span className="text-gray-400 text-sm mr-2">Groups:</span>
-              <span className="font-semibold text-treez-cyan">{groupCount}</span>
-            </div>
+          {uniqueSkus > 0 && (
+            <>
+              <div>
+                <span className="text-gray-400 text-sm mr-2">Products:</span>
+                <span className="font-semibold text-treez-purple">{uniqueSkus}</span>
+              </div>
+              <div>
+                <span className="text-gray-400 text-sm mr-2">Configured:</span>
+                <span className="font-semibold text-treez-cyan">
+                  {imagesWithSku} / {imageCount}
+                </span>
+              </div>
+            </>
           )}
         </div>
 

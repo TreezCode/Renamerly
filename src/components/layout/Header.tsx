@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -18,13 +18,33 @@ const navLinks = [
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
   const isLanding = pathname === '/'
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (isLanding && href.startsWith('#')) {
+    if (href.startsWith('#')) {
       e.preventDefault()
-      const id = href.replace('#', '')
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+      
+      if (isLanding) {
+        // On landing page, smooth scroll to section with header offset
+        const id = href.replace('#', '')
+        const element = document.getElementById(id)
+        if (element) {
+          const headerOffset = 64
+          const elementPosition = element.getBoundingClientRect().top
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          })
+        }
+      } else {
+        // On other pages, navigate to landing page with section as query param
+        const section = href.replace('#', '')
+        router.push(`/?scrollTo=${section}`)
+      }
+      
       setIsMobileMenuOpen(false)
     }
   }
@@ -48,7 +68,7 @@ export function Header() {
             {navLinks.map((link) => (
               <li key={link.name}>
                 <a
-                  href={isLanding ? link.href : `/${link.href}`}
+                  href={isLanding ? link.href : '/'}
                   onClick={(e) => handleNavClick(e, link.href)}
                   className="text-sm font-medium text-gray-400 hover:text-treez-cyan transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-treez-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-deep-space rounded-lg px-2 py-1"
                 >
@@ -101,7 +121,7 @@ export function Header() {
               {navLinks.map((link) => (
                 <a
                   key={link.name}
-                  href={isLanding ? link.href : `/${link.href}`}
+                  href={isLanding ? link.href : '/'}
                   onClick={(e) => handleNavClick(e, link.href)}
                   className="block text-sm font-medium text-gray-400 hover:text-treez-cyan transition-colors duration-300 py-2"
                 >

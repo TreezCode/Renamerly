@@ -54,6 +54,19 @@ export function Button({
     )
   }
 
+  if (variant === 'danger') {
+    return (
+      <button
+        className={`group relative ${base} bg-linear-to-r from-red-600 to-red-500 text-white shadow-lg hover:shadow-red-500/50 hover:scale-105 active:scale-95 overflow-hidden focus-visible:ring-red-500 ${disabledStyles} ${className}`}
+        disabled={disabled}
+        {...props}
+      >
+        <span className="relative z-10 inline-flex items-center gap-2">{children}</span>
+        <div className="absolute inset-0 bg-linear-to-r from-red-500 to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </button>
+    )
+  }
+
   return (
     <button
       className={`${base} border border-white/10 hover:border-treez-purple bg-white/5 hover:bg-treez-purple/10 hover:shadow-lg hover:shadow-treez-purple/30 hover:scale-110 active:scale-95 focus-visible:ring-treez-purple ${disabledStyles} ${className}`}
