@@ -54,15 +54,16 @@ export function Header() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/brand/logo-full.webp"
-              alt="AssetFlow"
-              width={160}
-              height={40}
-              priority
-              style={{ width: 'auto', height: '40px' }}
-              className="object-contain"
-            />
+            <div style={{ width: 'auto', height: '40px' }}>
+              <Image
+                src="/brand/logo-full.webp"
+                alt="AssetFlow"
+                width={160}
+                height={40}
+                priority
+                className="w-auto h-full object-contain"
+              />
+            </div>
           </Link>
 
           <ul className="hidden md:flex items-center gap-8">
