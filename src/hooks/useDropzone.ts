@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
-import { ACCEPTED_FILE_TYPES } from '@/lib/constants'
+import { ACCEPTED_FILE_TYPES, ACCEPTED_EXTENSIONS } from '@/lib/constants'
 
 interface UseDropzoneProps {
   onFiles: (files: File[]) => void
@@ -16,9 +16,21 @@ export function useDropzone({ onFiles, maxFiles }: UseDropzoneProps) {
 
       const files = Array.from(fileList)
       const acceptedTypes = Object.keys(ACCEPTED_FILE_TYPES)
-      const validFiles = files.filter((file) =>
-        acceptedTypes.includes(file.type)
-      )
+      
+      const validFiles = files.filter((file) => {
+        // Check by MIME type first (for standard images)
+        if (acceptedTypes.includes(file.type)) {
+          return true
+        }
+        
+        // Check by extension (important for RAW files which have no standard MIME type)
+        const fileName = file.name.toLowerCase()
+        const hasValidExtension = ACCEPTED_EXTENSIONS.some(ext => 
+          fileName.endsWith(ext.toLowerCase())
+        )
+        
+        return hasValidExtension
+      })
 
       if (maxFiles && validFiles.length > maxFiles) {
         return validFiles.slice(0, maxFiles)

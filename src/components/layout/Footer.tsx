@@ -45,19 +45,31 @@ export function Footer() {
   return (
     <footer className="bg-deep-space border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <Image
-              src="/brand/logo-full.webp"
-              alt="AssetFlow"
-              width={160}
-              height={40}
-              className="h-10 w-auto mb-3"
-            />
-            <p className="text-sm text-gray-400">
-              Product Image Renaming Tool
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+          {/* Logo Section - More Prominent */}
+          <div className="flex flex-col items-center md:items-start">
+            <div className="mb-4">
+              <Image
+                src="/brand/logo-full.webp"
+                alt="AssetFlow"
+                width={200}
+                height={50}
+                style={{ width: 'auto', height: '50px' }}
+                className="object-contain md:hidden"
+              />
+              <Image
+                src="/brand/logo-full.webp"
+                alt="AssetFlow"
+                width={224}
+                height={56}
+                style={{ width: 'auto', height: '56px' }}
+                className="object-contain hidden md:block"
+              />
+            </div>
+            <p className="text-sm text-gray-400 text-center md:text-left max-w-xs">
+              Professional Image Renaming for E-commerce & Photography
             </p>
-            <p className="mt-4 text-xs text-gray-500">
+            <p className="mt-6 text-xs text-gray-500 text-center md:text-left">
               Built by{' '}
               <a
                 href="https://buildwithtreez.com"
@@ -70,9 +82,9 @@ export function Footer() {
             </p>
           </div>
 
-          <div>
+          <div className="flex flex-col items-center md:items-start">
             <h3 className="text-sm font-semibold text-white mb-4">Quick Links</h3>
-            <nav className="flex flex-col gap-2">
+            <nav className="flex flex-col gap-2 items-center md:items-start">
               {quickLinks.map((link) => (
                 <a
                   key={link.name}
@@ -94,9 +106,9 @@ export function Footer() {
             </nav>
           </div>
 
-          <div>
+          <div className="flex flex-col items-center md:items-start">
             <h3 className="text-sm font-semibold text-white mb-4">Get Started</h3>
-            <p className="text-sm text-gray-400 mb-4">
+            <p className="text-sm text-gray-400 mb-4 text-center md:text-left">
               Start renaming your product images for free. No signup required.
             </p>
             <Link

@@ -153,7 +153,11 @@ export const useAssetStore = create<AssetStore>()(
     if (imageToRemove) {
       cleanupThumbnails([imageToRemove])
     }
-    set((state) => ({ images: state.images.filter((img) => img.id !== id) }))
+    set((state) => ({ 
+      images: state.images.filter((img) => img.id !== id),
+      // Also remove from selection to keep UI in sync
+      selectedImageIds: state.selectedImageIds.filter((selectedId) => selectedId !== id)
+    }))
   },
 
   setImageSku: (imageId: string, sku: string) => {
