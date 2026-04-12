@@ -24,6 +24,48 @@ Elevate AssetFlow from a portfolio piece to a revenue-generating SaaS product th
 
 ## SCOPE DEFINITION
 
+### Phase 0: Market Expansion Features (Pre-Premium)
+**Estimated Duration**: 2-3 sessions  
+**Goal**: Broaden market appeal to photographers and general users before premium transformation
+
+**Rationale**: 
+- Validate multi-market appeal before building premium tier
+- Gather data on which user segments convert best
+- Auto-iteration is table-stakes for batch renamers
+- RAW support differentiates from basic tools
+
+**In Scope**:
+- ✅ Auto-iteration presets (01/02/03, 001/002/003, A/B/C)
+- ✅ Sequential numbering with customizable padding
+- ✅ Alphabetic iteration (uppercase/lowercase)
+- ✅ RAW file format support (CR2, NEF, ARW, DNG, RAF)
+- ✅ Embedded JPEG preview extraction from RAW files
+- ✅ Preserve RAW file extensions on export
+- ✅ Updated UI to show iteration presets alongside descriptors
+- ✅ File type detection and format support messaging
+
+**Technical Implementation**:
+- Library: `exifr` (modern, fast EXIF + preview extraction)
+- RAW formats: Canon CR2, Nikon NEF, Sony ARW, Adobe DNG, Fujifilm RAF
+- Extract embedded preview (most RAW files contain full JPEG preview)
+- Display preview as thumbnail (same as regular images)
+- Rename file while preserving original RAW extension
+- Bundle size impact: ~15-20kb gzipped
+
+**User Positioning**:
+- E-commerce: "Use SKU-based naming OR simple numbered sequences"
+- Photographers: "Professional sequential naming + RAW file support"
+- General users: "Smart numbering for any batch of files"
+
+**Out of Scope** (Reserved for Pro Tier):
+- ❌ Full RAW processing/decoding
+- ❌ RAW → JPEG conversion
+- ❌ Advanced EXIF metadata editing
+- ❌ RAW adjustment presets
+- ❌ Date/time-based naming from EXIF
+
+---
+
 ### Phase 1: Design System Enhancement (Sacred Geometry & Brand Cohesion)
 **Estimated Duration**: 2-3 sessions  
 **Goal**: Full alignment with Build With Treez design system including sacred geometry accents
@@ -176,11 +218,16 @@ CREATE TABLE subscription_events (
 | Feature | Free | Pro ($19/mo) |
 |---------|------|--------------|
 | Images per session | 20 | Unlimited |
+| Auto-iteration naming | ✅ | ✅ |
+| RAW file preview | ✅ | ✅ |
+| RAW processing & conversion | ❌ | ✅ |
+| EXIF metadata editing | ❌ | ✅ |
 | Saved projects | 0 | Unlimited |
 | Saved templates | 0 | 10 |
 | Export history | 0 | 30 days |
 | Priority support | ❌ | ✅ |
 | Batch operations | ❌ | ✅ |
+| AI descriptor suggestions | ❌ | ✅ |
 
 **In Scope**:
 - ✅ Stripe account setup
@@ -283,7 +330,7 @@ CREATE TABLE subscription_events (
 ---
 
 ### Phase 8: Advanced Premium Features
-**Estimated Duration**: 3-4 sessions  
+**Estimated Duration**: 4-5 sessions  
 **Goal**: Power-user features for professionals
 
 **Batch Operations** (Pro only):
@@ -298,11 +345,25 @@ CREATE TABLE subscription_events (
 - Auto-crop and resize options
 - Background removal integration (remove.bg API)
 
+**RAW Processing** (Pro only - NEW):
+- Full RAW file decoding and processing
+- RAW → JPEG/PNG conversion with quality settings
+- RAW → WebP export for web optimization
+- EXIF metadata batch editing (copyright, camera settings, etc.)
+- Date/time-based auto-naming from EXIF data
+- Camera make/model in filename templates
+- GPS location data extraction (when available)
+- Preserve or strip metadata on export
+- RAW histogram preview for exposure validation
+- Batch RAW adjustments (exposure, white balance - basic)
+
 **Export Enhancements** (Pro only):
-- CSV manifest file
+- CSV manifest file with EXIF data
 - Multiple export formats (ZIP, folders, cloud upload)
 - Dropbox/Google Drive integration
 - Custom watermarking
+- Output format per SKU group
+- Compression quality settings
 
 **In Scope**:
 - ✅ Multi-select UI component
@@ -310,11 +371,25 @@ CREATE TABLE subscription_events (
 - ✅ AI descriptor suggestions (OpenAI Vision API)
 - ✅ Export format picker
 - ✅ CSV manifest generation
+- ✅ RAW decoder (libraw-wasm or alternative)
+- ✅ EXIF metadata editor UI
+- ✅ RAW conversion settings panel
+- ✅ Format-specific export options
 
 **Out of Scope**:
 - ❌ Custom AI model training
 - ❌ Video file support
 - ❌ 3D model support
+- ❌ Advanced RAW editing (curves, HSL, etc.) - use Lightroom for that
+- ❌ RAW lens correction
+- ❌ RAW noise reduction
+
+**Technical Notes**:
+- Use `libraw-wasm` for client-side RAW decoding (~800kb bundle impact)
+- Cache decoded RAW previews in IndexedDB for performance
+- Limit concurrent RAW processing to 2-3 files (memory constraints)
+- Show progress indicator for RAW conversion (can take 3-5s per file)
+- Consider worker threads for RAW processing to keep UI responsive
 
 ---
 
@@ -578,6 +653,18 @@ When a Pro user cancels:
 
 ## ACCEPTANCE CRITERIA (Full Plan)
 
+### Phase 0: Market Expansion
+- [ ] Auto-iteration presets available in descriptor dropdown
+- [ ] 2-digit, 3-digit, 4-digit number padding options
+- [ ] Alphabetic iteration (A-Z, a-z) working
+- [ ] RAW files (CR2, NEF, ARW, DNG, RAF) can be uploaded
+- [ ] JPEG preview extracted from RAW files and displayed
+- [ ] RAW file extensions preserved on export
+- [ ] File type badge shows "RAW" for supported formats
+- [ ] Help text explains RAW preview vs. full processing
+- [ ] Bundle size increase < 25kb gzipped
+- [ ] Performance: Preview extraction < 500ms per RAW file
+
 ### Phase 1: Design System
 - [ ] Sacred geometry components created and integrated
 - [ ] All landing page sections use sacred geometry backgrounds
@@ -677,10 +764,11 @@ When a Pro user cancels:
 
 ## TIMELINE ESTIMATE
 
-**Total Duration**: 20-25 sessions (10-12 weeks at 2 sessions/week)
+**Total Duration**: 23-29 sessions (11.5-14.5 weeks at 2 sessions/week)
 
 | Phase | Sessions | Weeks |
 |-------|----------|-------|
+| 0. Market Expansion (Pre-Premium) | 2-3 | 1-1.5 |
 | 1. Design System | 2-3 | 1-1.5 |
 | 2. Plan 04 Completion | 1-2 | 0.5-1 |
 | 3. Authentication | 2-3 | 1-1.5 |
@@ -688,11 +776,13 @@ When a Pro user cancels:
 | 5. Stripe | 2-3 | 1-1.5 |
 | 6. Dashboard | 3-4 | 1.5-2 |
 | 7. Premium Features | 2-3 | 1-1.5 |
-| 8. Advanced Features | 3-4 | 1.5-2 |
+| 8. Advanced Features (inc. RAW) | 4-5 | 2-2.5 |
 | 9. Marketing | 2 | 1 |
 | 10. Launch Prep | 2-3 | 1-1.5 |
 
-**Launch Target**: 10-12 weeks from start
+**Launch Target**: 11.5-14.5 weeks from start
+
+**Note**: Phase 0 should be completed FIRST to validate market fit before investing in premium infrastructure.
 
 ---
 
@@ -711,6 +801,8 @@ When a Pro user cancels:
 
 ## NOTES
 
+- **Phase 0 is CRITICAL** - Complete auto-iteration + RAW preview BEFORE building premium features. This validates multi-market appeal and informs premium feature prioritization.
+- **RAW strategy is two-tiered** - Free tier gets preview extraction (simple), Pro tier gets full processing (advanced). This creates clear upgrade path for photographers.
 - **This plan assumes Plan 04 is partially complete** - we have MVP deployed but need to finish polish tasks
 - **Sacred geometry** is a key brand differentiator - invest time in getting the animations right
 - **Stripe webhooks are critical** - test thoroughly in staging before production
@@ -718,17 +810,31 @@ When a Pro user cancels:
 - **Start simple with Pro features** - you can always add more later based on user feedback
 - **Email capture early** - build your list even before Pro tier is ready
 - **Consider beta pricing** - launch at $9/mo to get early adopters, raise to $19/mo later
+- **RAW processing bundle impact** - Phase 0 adds ~20kb, Phase 8 Pro adds ~800kb. Use code splitting to keep free tier lean.
+- **User segment tracking** - Track which features each user uses (SKU vs. iteration vs. RAW) to inform marketing and feature development.
 
-**Confidence Score: 8/10** — This is an ambitious but achievable plan. The main variables are Stripe webhook complexity and RLS policy debugging. Budget extra time for those.
+**Confidence Score: 8.5/10** — Phase 0 additions reduce risk by validating market fit early. Main variables remain Stripe webhook complexity, RLS policy debugging, and RAW processing performance optimization.
 
 ---
 
 ## NEXT STEPS
 
-1. **Review this plan with stakeholders** - confirm phases and timeline
-2. **Set up Supabase project** - get credentials ready
-3. **Create Stripe account** - configure products and test mode
-4. **Start Phase 1** - sacred geometry components (quick visual win)
-5. **Commit to 2 sessions/week minimum** - maintain momentum
+1. **START WITH PHASE 0** - Auto-iteration + RAW preview (2-3 sessions)
+   - Install `exifr` library for RAW preview extraction
+   - Implement iteration presets in descriptor selector
+   - Add RAW file type detection and validation
+   - Update UI messaging for broader market appeal
+   - Test with real RAW files from multiple camera brands
+   
+2. **Validate market fit** - Track which features users engage with most
+   - Monitor: SKU workflow vs. iteration vs. RAW usage
+   - Gather feedback from photographer community
+   - Adjust premium feature priorities based on data
 
-**Ready to build an enterprise SaaS? Let's start with Phase 1!** 🚀
+3. **Then proceed with premium transformation:**
+   - Set up Supabase project - get credentials ready
+   - Create Stripe account - configure products and test mode
+   - Start Phase 1 - sacred geometry components
+   - Commit to 2 sessions/week minimum - maintain momentum
+
+**Ready to expand your market? Let's start with Phase 0!** 🚀
