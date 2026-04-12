@@ -46,27 +46,29 @@ export function Footer() {
     <footer className="bg-deep-space border-t border-white/10 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-12 w-full">
-          {/* Logo Section - More Prominent */}
+          {/* Logo Section - Prominent Brand Display */}
           <div className="flex flex-col items-center md:items-start">
-            <div className="mb-6">
+            <div className="mb-8">
+              {/* Mobile: 120px tall - prominent on mobile */}
               <Image
                 src="/brand/logo-full.webp"
                 alt="AssetFlow"
-                width={320}
-                height={80}
-                style={{ width: 'auto', height: '80px', maxWidth: '100%' }}
+                width={480}
+                height={120}
+                style={{ width: 'auto', height: '120px', maxWidth: '100%' }}
                 className="object-contain md:hidden"
               />
+              {/* Desktop: 140px tall - matches reference design */}
               <Image
                 src="/brand/logo-full.webp"
                 alt="AssetFlow"
-                width={360}
-                height={90}
-                style={{ width: 'auto', height: '90px', maxWidth: '100%' }}
+                width={560}
+                height={140}
+                style={{ width: 'auto', height: '140px', maxWidth: '100%' }}
                 className="object-contain hidden md:block"
               />
             </div>
-            <p className="text-xs text-gray-500 text-center md:text-left px-2 md:px-0">
+            <p className="text-sm text-gray-400 text-center md:text-left px-2 md:px-0 max-w-xs">
               Where Sacred Geometry Meets Modern Technology
             </p>
             <p className="mt-6 text-xs text-gray-500 text-center md:text-left">

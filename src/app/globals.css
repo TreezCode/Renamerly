@@ -1,14 +1,22 @@
 @import "tailwindcss";
 
-/* Ensure proper viewport sizing */
+/* Ensure proper viewport sizing and prevent horizontal overflow */
 html {
   max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   max-width: 100%;
+  overflow-x: hidden;
   overflow-wrap: break-word;
   word-wrap: break-word;
+}
+
+/* Ensure all direct children respect viewport width */
+#main-content {
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Build With Treez Design System - Reduced Motion Support */

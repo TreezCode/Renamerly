@@ -11,7 +11,7 @@ import { ScrollHandler } from '@/components/landing/ScrollHandler'
 
 export default function LandingPage() {
   return (
-    <>
+    <div className="w-full overflow-x-hidden">
       <Suspense fallback={null}>
         <ScrollHandler />
       </Suspense>
@@ -23,6 +23,6 @@ export default function LandingPage() {
       <Audience />
       <Pricing />
       <CallToAction />
-    </>
+    </div>
   )
 }

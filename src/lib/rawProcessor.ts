@@ -15,31 +15,55 @@ export function isRawFile(filename: string): boolean {
  */
 export async function extractRawPreview(file: File): Promise<string | null> {
   try {
-    // Try method 1: Use exifr.thumbnail() to extract the thumbnail directly
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const thumbnailBuffer = await (exifr as any).thumbnail(file)
+    console.log(`[RAW] Attempting to extract preview from ${file.name}`)
     
-    if (thumbnailBuffer && thumbnailBuffer instanceof Uint8Array) {
-      // Convert buffer to Blob then to URL
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore - Uint8Array.buffer works at runtime despite type mismatch
-      const blob = new Blob([thumbnailBuffer.buffer], { type: 'image/jpeg' })
-      const blobUrl = URL.createObjectURL(blob)
-      return blobUrl
+    // Method 1: Try exifr.thumbnail() with proper configuration
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const thumbnailBuffer = await (exifr as any).thumbnail(file, {
+        mergeOutput: false,
+      })
+      
+      if (thumbnailBuffer) {
+        console.log(`[RAW] Method 1 success: Got buffer of type`, thumbnailBuffer.constructor.name)
+        
+        // Handle different buffer types
+        let arrayBuffer: ArrayBuffer
+        if (thumbnailBuffer instanceof ArrayBuffer) {
+          arrayBuffer = thumbnailBuffer
+        } else if (thumbnailBuffer instanceof Uint8Array) {
+          arrayBuffer = thumbnailBuffer.buffer as ArrayBuffer
+        } else if (thumbnailBuffer.buffer) {
+          arrayBuffer = thumbnailBuffer.buffer as ArrayBuffer
+        } else {
+          throw new Error('Unknown buffer type')
+        }
+        
+        const blob = new Blob([arrayBuffer as BlobPart], { type: 'image/jpeg' })
+        const blobUrl = URL.createObjectURL(blob)
+        console.log(`[RAW] Successfully extracted preview:`, blobUrl)
+        return blobUrl
+      }
+    } catch (error) {
+      console.log(`[RAW] Method 1 failed:`, error)
     }
     
-    // Method 2: Try thumbnailUrl() as fallback
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const thumbnailUrl = await (exifr as any).thumbnailUrl(file)
-    if (thumbnailUrl) {
-      return thumbnailUrl
+    // Method 2: Try exifr.thumbnailUrl() 
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const thumbnailUrl = await (exifr as any).thumbnailUrl(file)
+      if (thumbnailUrl) {
+        console.log(`[RAW] Method 2 success:`, thumbnailUrl)
+        return thumbnailUrl
+      }
+    } catch (error) {
+      console.log(`[RAW] Method 2 failed:`, error)
     }
     
-    console.warn('No thumbnail found in RAW file:', file.name)
+    console.warn(`[RAW] No thumbnail found in ${file.name}`)
     return null
   } catch (error) {
-    console.warn('Failed to extract RAW preview from', file.name, ':', error)
-    // Return null to indicate preview extraction failed - will fall back to placeholder
+    console.error(`[RAW] Failed to extract preview from ${file.name}:`, error)
     return null
   }
 }
