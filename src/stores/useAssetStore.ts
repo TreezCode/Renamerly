@@ -105,7 +105,7 @@ export const useAssetStore = create<AssetStore>()(
     }
 
     try {
-      const { isRawFile, extractRawPreview } = await import('@/lib/rawProcessor')
+      const { isRawFile, extractRawPreview, generateRawPlaceholder } = await import('@/lib/rawProcessor')
       
       const newImages: AssetImage[] = await Promise.all(
         validatedFiles.map(async (file) => {
@@ -113,9 +113,11 @@ export const useAssetStore = create<AssetStore>()(
           let thumbnail: string
           
           if (isRaw) {
-            // Try to extract preview from RAW file
+            // Try to extract embedded JPEG preview from RAW file
             const rawPreview = await extractRawPreview(file)
-            thumbnail = rawPreview || await generateThumbnail(file)
+            // If extraction fails, use a styled placeholder instead of trying to generate from RAW
+            // (browsers can't render RAW files directly)
+            thumbnail = rawPreview || generateRawPlaceholder(file.name)
           } else {
             thumbnail = await generateThumbnail(file)
           }
