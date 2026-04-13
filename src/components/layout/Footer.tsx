@@ -50,18 +50,18 @@ export function Footer() {
               {/* Mobile: 120px tall - prominent on mobile */}
               <img
                 src="/brand/logo-full.webp"
-                alt="AssetFlow"
+                alt="Renamify"
                 className="h-[120px] w-auto object-contain md:hidden"
               />
               {/* Desktop: 140px tall - matches reference design */}
               <img
                 src="/brand/logo-full.webp"
-                alt="AssetFlow"
+                alt="Renamify"
                 className="h-[140px] w-auto object-contain hidden md:block"
               />
             </div>
             <p className="text-sm text-gray-400 text-center md:text-left px-2 md:px-0 max-w-xs">
-              Where Sacred Geometry Meets Modern Technology
+              Transform messy product images into organized, store-ready files
             </p>
             <p className="mt-6 text-xs text-gray-500 text-center md:text-left">
               Built by{' '}
@@ -117,7 +117,7 @@ export function Footer() {
 
         <div className="mt-8 pt-8 border-t border-white/10 text-center">
           <p className="text-gray-500 text-sm">
-            &copy; {new Date().getFullYear()} AssetFlow. All rights reserved.
+            &copy; {new Date().getFullYear()} Renamify by Build With Treez. All rights reserved.
           </p>
         </div>
       </div>

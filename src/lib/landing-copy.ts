@@ -32,7 +32,7 @@ export const landingCopy = {
   },
 
   solution: {
-    heading: 'AssetFlow fixes it in under 30 seconds.',
+    heading: 'Renamify fixes it in under 30 seconds.',
     body: 'Upload your images. Assign labels. Download perfectly named files.',
     reinforcement: 'No spreadsheets. No manual work. No headaches.',
   },
@@ -61,7 +61,7 @@ export const landingCopy = {
 
   features: {
     heading: 'Built for real workflows, not generic tools.',
-    subheading: 'Everything you need to rename images professionally — from e-commerce to photography',
+    subheading: 'Everything you need to rename images professionally - from e-commerce to photography',
     items: [
       {
         title: 'Smart Descriptor Locking',
@@ -69,7 +69,7 @@ export const landingCopy = {
       },
       {
         title: 'RAW File Support',
-        description: 'Upload CR2, NEF, ARW, DNG and other RAW formats — previews extracted automatically',
+        description: 'Upload CR2, NEF, ARW, DNG and other RAW formats - previews extracted automatically',
       },
       {
         title: 'Auto-Iteration Presets',
@@ -85,7 +85,7 @@ export const landingCopy = {
       },
       {
         title: 'No Signup Required',
-        description: 'Start using immediately — no account needed',
+        description: 'Start using immediately - no account needed',
       },
     ],
   },
@@ -93,11 +93,11 @@ export const landingCopy = {
   audience: {
     heading: 'Perfect for teams of one.',
     subheading:
-      'Whether you run a store, shoot weddings, or manage client assets, AssetFlow keeps your files clean and consistent.',
+      'Whether you run a store, shoot weddings, or manage client assets, Renamify keeps your files clean and consistent.',
     personas: [
       {
         title: 'Shopify store owners',
-        description: 'SKU-based naming for product listings — keeps your store organized and professional',
+        description: 'SKU-based naming for product listings - keeps your store organized and professional',
       },
       {
         title: 'Etsy sellers',
@@ -105,14 +105,14 @@ export const landingCopy = {
       },
       {
         title: 'Product photographers',
-        description: 'Deliver clean, sequentially-named assets to clients — works with RAW files',
+        description: 'Deliver clean, sequentially-named assets to clients - works with RAW files',
       },
       {
         title: 'Freelancers',
         description: 'Auto-iteration naming for shoots, projects, or client deliverables',
       },
     ],
-    reinforcement: 'E-commerce or photography — this tool adapts to your workflow.',
+    reinforcement: 'E-commerce or photography - this tool adapts to your workflow.',
   },
 
   pricing: {
@@ -155,7 +155,7 @@ export const landingCopy = {
   finalCta: {
     heading: 'Stop renaming files manually.',
     subheading: 'Start organizing your product images the right way.',
-    primaryCta: 'Try AssetFlow Free',
+    primaryCta: 'Try Renamify Free',
     secondaryCta: 'View Pricing',
   },
 } as const

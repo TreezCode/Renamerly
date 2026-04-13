@@ -63,7 +63,7 @@ export function Header() {
           >
             <img
               src="/brand/logo-full.webp"
-              alt="AssetFlow"
+              alt="Renamify"
               height="48"
               className="h-[48px] w-auto"
             />

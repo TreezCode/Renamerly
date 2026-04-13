@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/api/',
     },
-    sitemap: 'https://assetflow.vercel.app/sitemap.xml',
+    sitemap: 'https://renamify.app/sitemap.xml',
   }
 }

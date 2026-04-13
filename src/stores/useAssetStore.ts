@@ -372,7 +372,7 @@ export const useAssetStore = create<AssetStore>()(
   },
     }),
     {
-      name: 'assetflow-ui-state',
+      name: 'renamify-ui-state',
       partialize: (state) => ({
         hasSeenOnboarding: state.hasSeenOnboarding,
       }),

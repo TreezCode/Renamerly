@@ -20,21 +20,34 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://assetflow.app'),
+  metadataBase: new URL('https://renamify.app'),
   title: {
-    default: "AssetFlow — Product Image Renaming Tool | Build With Treez",
-    template: "%s | AssetFlow",
+    default: "Renamify — Product Image Renaming Tool | Build With Treez",
+    template: "%s | Renamify",
   },
   description:
     "Transform messy product image filenames into organized, SEO-friendly names in seconds. Batch rename photos for your Shopify or Etsy store with zero learning curve.",
   icons: {
     icon: [
-      { url: '/brand/logo-icon.webp', sizes: 'any' },
-      { url: '/brand/logo-icon.webp', sizes: '32x32', type: 'image/webp' },
-      { url: '/brand/logo-icon.webp', sizes: '16x16', type: 'image/webp' },
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/brand/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/brand/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
     ],
-    apple: '/brand/logo-icon.webp',
+    apple: [
+      { url: '/brand/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    other: [
+      {
+        rel: 'android-chrome-192x192',
+        url: '/brand/android-chrome-192x192.png',
+      },
+      {
+        rel: 'android-chrome-512x512',
+        url: '/brand/android-chrome-512x512.png',
+      },
+    ],
   },
+  manifest: '/site.webmanifest',
   keywords: [
     "image renaming",
     "product images",
@@ -51,9 +64,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://assetflow.vercel.app",
-    siteName: "AssetFlow",
-    title: "AssetFlow — Product Image Renaming Tool",
+    url: "https://renamify.app",
+    siteName: "Renamify",
+    title: "Renamify — Product Image Renaming Tool",
     description:
       "Transform product images into e-commerce ready files in seconds. No signup required.",
     images: [
@@ -61,13 +74,13 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "AssetFlow - Product Image Renaming Tool",
+        alt: "Renamify - Product Image Renaming Tool",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AssetFlow — Product Image Renaming Tool",
+    title: "Renamify — Product Image Renaming Tool",
     description:
       "Transform product images into e-commerce ready files in seconds.",
     images: ["/opengraph-image"],
@@ -94,7 +107,7 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "AssetFlow",
+    "name": "Renamify",
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
     "offers": {
@@ -102,13 +115,13 @@ export default function RootLayout({
       "price": "0",
       "priceCurrency": "USD"
     },
-    "description": "Transform product images into e-commerce ready files in seconds. Batch rename and organize your product photos with AssetFlow.",
+    "description": "Transform product images into e-commerce ready files in seconds. Batch rename and organize your product photos with Renamify.",
     "author": {
       "@type": "Organization",
       "name": "Build With Treez",
-      "url": "https://assetflow.vercel.app"
+      "url": "https://buildwithtreez.com"
     },
-    "screenshot": "https://assetflow.vercel.app/opengraph-image",
+    "screenshot": "https://renamify.app/opengraph-image",
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "5",

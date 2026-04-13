@@ -1,4 +1,4 @@
-export const APP_NAME = 'AssetFlow'
+export const APP_NAME = 'Renamify'
 
 export const MAX_FREE_IMAGES = 20
 
