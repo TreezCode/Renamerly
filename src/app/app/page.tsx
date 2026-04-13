@@ -100,7 +100,7 @@ export default function AppPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="space-y-3"
+              className="space-y-4 sm:space-y-5"
             >
               {skus.map((sku, index) => (
                 <motion.div

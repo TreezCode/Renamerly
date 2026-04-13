@@ -137,7 +137,7 @@ export const useAssetStore = create<AssetStore>()(
     set((state) => ({
       images: state.images.map((img) =>
         img.id === imageId
-          ? { ...img, sku: sku || null }
+          ? { ...img, sku: sku || null, descriptor: null, customDescriptor: null }
           : img
       ),
     }))
@@ -147,7 +147,7 @@ export const useAssetStore = create<AssetStore>()(
     set((state) => ({
       images: state.images.map((img) =>
         imageIds.includes(img.id)
-          ? { ...img, sku: sku || null }
+          ? { ...img, sku: sku || null, descriptor: null, customDescriptor: null }
           : img
       ),
       selectedImageIds: [], // Clear selection after bulk operation
@@ -158,8 +158,11 @@ export const useAssetStore = create<AssetStore>()(
     const { images } = get()
     const targetImage = images.find(img => img.id === imageId)
     
+    // Normalize empty string to null
+    const normalizedDescriptor = descriptor || null
+    
     // Check if this is an iteration preset
-    const iterationPreset = ITERATION_PRESETS.find(p => p.value === descriptor)
+    const iterationPreset = ITERATION_PRESETS.find(p => p.value === normalizedDescriptor)
     
     if (iterationPreset && targetImage) {
       // Auto-apply iteration to all images in same SKU (or no-SKU if no SKU assigned)
@@ -187,7 +190,11 @@ export const useAssetStore = create<AssetStore>()(
       set((state) => ({
         images: state.images.map((img) =>
           img.id === imageId
-            ? { ...img, descriptor, customDescriptor: descriptor === 'custom' ? img.customDescriptor : null }
+            ? { 
+                ...img, 
+                descriptor: normalizedDescriptor, 
+                customDescriptor: normalizedDescriptor === 'custom' ? img.customDescriptor : null 
+              }
             : img
         ),
       }))

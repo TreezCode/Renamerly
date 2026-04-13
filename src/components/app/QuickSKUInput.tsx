@@ -2,9 +2,8 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Package, Check } from 'lucide-react'
+import { Zap } from 'lucide-react'
 import { useAssetStore } from '@/stores/useAssetStore'
-import { Button } from '@/components/ui/Button'
 import { sanitizeString } from '@/lib/filename'
 
 export function QuickSKUInput() {
@@ -47,67 +46,75 @@ export function QuickSKUInput() {
   // Hide this panel when images are selected - SelectionActionBar handles it
   if (images.length === 0 || hasSelection) return null
 
+  const targetCount = hasImagesWithoutSku ? imagesWithoutSku.length : 0
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-4 sm:p-6"
+      transition={{ duration: 0.3 }}
+      className="bg-white/5 backdrop-blur-xl border border-white/10 
+        rounded-xl p-3 sm:p-4
+        hover:bg-white/10 hover:border-treez-purple/30
+        transition-all duration-300"
     >
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="p-2 rounded-lg bg-treez-purple/20">
-          <Package className="w-5 h-5 text-treez-purple" />
-        </div>
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold text-white">
-            {hasSelection ? 'Set SKU for Selected Images' : 'Quick SKU Assignment'}
-          </h3>
-          <p className="text-sm text-gray-400">
-            {hasSelection 
-              ? `${selectedImageIds.length} image(s) selected`
-              : hasImagesWithoutSku 
-              ? `${imagesWithoutSku.length} image(s) need a SKU`
-              : 'All images have SKUs assigned'}
-          </p>
-        </div>
-      </div>
-
-      {/* Input Section */}
-      <div className="space-y-3">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1">
-            <input
-              type="text"
-              value={sku}
-              onChange={(e) => setSku(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Enter SKU (e.g., SHOE-123)"
-              className="w-full px-4 py-3 rounded-lg 
-                bg-deep-space border border-white/20
-                text-white placeholder-gray-500
-                focus:outline-none focus:ring-2 focus:ring-treez-purple focus:border-transparent
-                transition-all duration-300"
-            />
+      {/* Compact Single Row */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Icon + Label */}
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="p-1.5 rounded-lg bg-linear-to-br from-treez-purple/20 to-treez-cyan/20">
+            <Zap className="w-4 h-4 text-treez-cyan" />
           </div>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={handleApply}
-            disabled={!sku.trim() || (!hasSelection && !hasImagesWithoutSku)}
-            className="gap-2 shrink-0"
-          >
-            <Check className="w-4 h-4" />
-            {hasSelection ? 'Apply to Selected' : 'Apply to All'}
-          </Button>
+          <span className="text-sm font-medium text-white hidden sm:inline">
+            Quick Assign
+          </span>
         </div>
-      </div>
 
-      {/* Helper Text */}
-      <div className="mt-4 p-3 rounded-lg bg-treez-purple/10 border border-treez-purple/20">
-        <p className="text-xs text-gray-300">
-          <strong className="text-treez-purple">Tip:</strong> SKUs will be used in filenames. 
-          Use alphanumeric characters and hyphens only. Example: PRODUCT-ABC-123
-        </p>
+        {/* Input */}
+        <input
+          type="text"
+          value={sku}
+          onChange={(e) => setSku(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="SKU (e.g., SHOE-123)"
+          className="flex-1 px-3 py-2 rounded-lg 
+            bg-white/5 backdrop-blur-sm border border-white/10
+            text-white placeholder-gray-400 text-sm
+            focus:outline-none focus:ring-2 focus:ring-treez-purple focus:border-transparent
+            transition-all duration-300
+            min-w-0"
+        />
+
+        {/* Target Count Badge */}
+        {targetCount > 0 && (
+          <span className="hidden sm:inline px-2.5 py-1 rounded-full 
+            bg-linear-to-r from-treez-purple/20 to-treez-cyan/20 
+            border border-treez-purple/30 backdrop-blur-sm
+            text-treez-cyan text-xs font-medium whitespace-nowrap">
+            → {targetCount}
+          </span>
+        )}
+
+        {/* Apply Button */}
+        <button
+          onClick={handleApply}
+          disabled={!sku.trim() || targetCount === 0}
+          className="group relative px-4 py-2 rounded-lg
+            bg-linear-to-r from-treez-purple to-treez-pink
+            text-white text-sm font-semibold
+            shadow-lg hover:shadow-treez-purple/50
+            hover:scale-105 active:scale-95
+            transition-all duration-300
+            disabled:opacity-50 disabled:cursor-not-allowed
+            disabled:hover:scale-100 disabled:hover:shadow-none
+            whitespace-nowrap overflow-hidden"
+        >
+          <span className="relative z-10">Apply</span>
+          <div className="absolute inset-0 
+            bg-linear-to-r from-treez-pink to-treez-purple 
+            opacity-0 group-hover:opacity-100 
+            transition-opacity duration-300" />
+        </button>
       </div>
     </motion.div>
   )
