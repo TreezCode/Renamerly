@@ -47,8 +47,8 @@ export function UploadZone() {
         relative border-2 border-dashed rounded-xl transition-all duration-300 cursor-pointer
         ${hasImages ? 'p-4' : 'p-12'}
         ${isDragOver
-          ? 'border-treez-cyan bg-treez-cyan/5'
-          : 'border-white/20 hover:border-treez-purple/50 bg-white/5'
+          ? 'border-treez-cyan bg-treez-cyan/10 shadow-lg shadow-treez-cyan/30 scale-[1.005]'
+          : 'border-white/20 hover:border-treez-purple/30 bg-white/5'
         }
       `}
     >
@@ -61,8 +61,27 @@ export function UploadZone() {
         className="hidden"
       />
 
+      {/* Drop Indicator Overlay */}
+      {isDragOver && (
+        <div
+          className="absolute inset-0 rounded-xl bg-treez-cyan/10 backdrop-blur-md
+            flex items-center justify-center z-20 pointer-events-none"
+        >
+          <div className="flex flex-col items-center gap-3">
+            <div className="p-4 rounded-full bg-treez-cyan/20 backdrop-blur-sm shadow-lg shadow-treez-cyan/30">
+              <Upload className="w-8 h-8 text-treez-cyan" />
+            </div>
+            <p className="text-lg font-semibold text-white drop-shadow-lg">
+              Drop images here
+            </p>
+          </div>
+        </div>
+      )}
+
       {hasImages ? (
-        <div className="flex items-center justify-center gap-4">
+        <div className={`flex items-center justify-center gap-4 transition-opacity duration-200 ${
+          isDragOver ? 'pointer-events-none opacity-50' : ''
+        }`}>
           <Upload className="w-5 h-5 text-treez-cyan" />
           <div className="text-left">
             <p className="text-white font-medium">
@@ -74,7 +93,9 @@ export function UploadZone() {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center text-center">
+        <div className={`flex flex-col items-center justify-center text-center transition-opacity duration-200 ${
+          isDragOver ? 'pointer-events-none opacity-50' : ''
+        }`}>
           <div className="w-16 h-16 mb-4 rounded-full bg-linear-to-br from-treez-purple/20 to-treez-cyan/20 flex items-center justify-center">
             <Upload className="w-8 h-8 text-treez-cyan" />
           </div>

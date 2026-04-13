@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { Images } from 'lucide-react'
 import { useAssetStore } from '@/stores/useAssetStore'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { DragDropProvider } from '@/components/app/DragDropProvider'
@@ -11,7 +10,7 @@ import { UploadZone } from '@/components/app/UploadZone'
 import { SelectionActionBar } from '@/components/app/SelectionActionBar'
 import { QuickSKUInput } from '@/components/app/QuickSKUInput'
 import { SKUProductGroup } from '@/components/app/SKUProductGroup'
-import { SelectableImageTile } from '@/components/app/SelectableImageTile'
+import { ImagesWithoutSKU } from '@/components/app/ImagesWithoutSKU'
 import { ExportControls } from '@/components/app/ExportControls'
 import { OnboardingModal } from '@/components/app/OnboardingModal'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
@@ -92,12 +91,15 @@ export default function AppPage() {
             </motion.div>
           )}
 
-          {/* SKU Product Groups - Auto-grouped by SKU */}
+          {/* Images Without SKU - Inbox/Staging Area at TOP (Enterprise Pattern) */}
+          <ImagesWithoutSKU images={imagesWithoutSku} />
+
+          {/* SKU Product Groups - Organized items below inbox (Enterprise Pattern) */}
           {skus.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.3 }}
               className="space-y-3"
             >
               {skus.map((sku, index) => (
@@ -105,44 +107,11 @@ export default function AppPage() {
                   key={sku}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + index * 0.05 }}
+                  transition={{ delay: 0.3 + index * 0.05 }}
                 >
                   <SKUProductGroup sku={sku} images={groupedBySku[sku]} />
                 </motion.div>
               ))}
-            </motion.div>
-          )}
-
-          {/* Images Without SKU - Selectable Grid */}
-          {imagesWithoutSku.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-4 sm:p-6"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-yellow-500/20">
-                  <Images className="w-5 h-5 text-yellow-400" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-white">
-                    Images Without SKU
-                  </h3>
-                  <p className="text-sm text-gray-400">
-                    Click to select, then assign a SKU above
-                  </p>
-                </div>
-                <span className="px-3 py-1 rounded-full bg-yellow-500/20 border border-yellow-500/30 
-                  text-yellow-400 text-sm font-medium">
-                  {imagesWithoutSku.length}
-                </span>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-                {imagesWithoutSku.map((image) => (
-                  <SelectableImageTile key={image.id} image={image} />
-                ))}
-              </div>
             </motion.div>
           )}
 
