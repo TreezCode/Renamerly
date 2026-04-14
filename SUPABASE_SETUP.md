@@ -102,7 +102,32 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 ---
 
-## 🔐 Step 5: Configure OAuth Providers
+## 🔐 Step 5: Configure Redirect URLs
+
+Before setting up OAuth providers, configure where Supabase can redirect users after authentication.
+
+1. Go to Supabase Dashboard → **Authentication** → **URL Configuration**
+2. Set **Site URL** to your primary domain:
+   - Local: `http://localhost:3000`
+   - Vercel: `https://your-app.vercel.app`
+   - Production: `https://renamify.app`
+3. Add **Redirect URLs** (one per line):
+   ```
+   http://localhost:3000/**
+   https://your-app-name.vercel.app/**
+   https://renamify.app/**
+   ```
+
+**Wildcards (`**`):** Allow all paths under that domain
+
+**Why multiple URLs?**
+- Local development (localhost)
+- Vercel preview/production deploys
+- Custom domain (when purchased)
+
+---
+
+## 🔐 Step 6: Configure OAuth Providers
 
 ### Google OAuth
 
@@ -124,24 +149,34 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 ### GitHub OAuth
 
-1. Go to [GitHub Settings](https://github.com/settings/developers)
+1. Go to [GitHub Settings → Developer Settings → OAuth Apps](https://github.com/settings/developers)
 2. Click **"New OAuth App"**
 3. Fill in details:
-   - **Application name:** Renamify
-   - **Homepage URL:** `https://renamify.app` (or your domain)
-   - **Authorization callback URL:**
+   - **Application name:** Renamify (or your preference)
+   - **Homepage URL:** Your app URL:
+     - Development: `http://localhost:3000`
+     - Vercel: `https://your-app.vercel.app`
+     - Production: `https://renamify.app` (when purchased)
+   - **Authorization callback URL:** ⚠️ **This is your SUPABASE URL, not your app URL!**
      ```
-     https://your-project.supabase.co/auth/v1/callback
+     https://your-project-ref.supabase.co/auth/v1/callback
      ```
+     Example: `https://abcdefghijk.supabase.co/auth/v1/callback`
 4. Click **"Register application"**
-5. Copy **Client ID** and generate **Client Secret**
+5. Copy **Client ID** and click **"Generate a new client secret"** (copy it immediately!)
 6. In Supabase → **Authentication** → **Providers** → **GitHub**:
    - Paste Client ID and Secret
    - ✅ Enable GitHub provider
 
+**✅ Using .vercel.app domains:** Absolutely fine! Just update the Homepage URL to your Vercel domain.
+
+**How OAuth flows:** User clicks login → GitHub → **Supabase callback** → Your app
+- GitHub redirects to Supabase (callback URL)
+- Supabase redirects to your app (redirect URLs configured below)
+
 ---
 
-## 🧪 Step 6: Test Authentication
+## 🧪 Step 7: Test Authentication
 
 ### Local Testing
 
@@ -168,34 +203,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 ---
 
-## 🚀 Step 7: Configure URL Redirects
-
-### Authentication URLs (Site URL)
-
-In Supabase → **Authentication** → **URL Configuration**:
-
-**Local Development:**
-```
-Site URL: http://localhost:3000
-```
-
-**Production:**
-```
-Site URL: https://renamify.app
-```
-
-### Redirect URLs (Whitelist)
-
-Add these to **Redirect URLs** section:
-```
-http://localhost:3000/**
-https://your-vercel-app.vercel.app/**
-https://renamify.app/**
-```
-
----
-
-## 📁 Files Created
+##  Files Created
 
 ### Auth Components
 - `src/components/auth/AuthCard.tsx` - Glass morphism card wrapper

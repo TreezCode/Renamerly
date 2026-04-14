@@ -6,7 +6,7 @@ const ContentSecurityPolicy = `
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: blob:;
   font-src 'self' data:;
-  connect-src 'self';
+  connect-src 'self' https://*.supabase.co https://accounts.google.com https://github.com;
   media-src 'self' blob:;
   object-src 'none';
   base-uri 'self';
