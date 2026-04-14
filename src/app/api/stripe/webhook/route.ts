@@ -31,6 +31,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    console.log(`[Webhook] Received event: ${event.type}`)
+    
     const supabase = await createClient()
 
     // Handle different event types
@@ -52,13 +54,22 @@ export async function POST(request: NextRequest) {
         // Update user profile with subscription status
         const tier = subscription.status === 'active' ? 'pro' : 'free'
         
-        await supabase
+        console.log(`Updating user ${userId} to tier: ${tier}`)
+        
+        const { data: profileData, error: profileError } = await supabase
           .from('user_profiles')
           .update({ subscription_tier: tier })
           .eq('id', userId)
+          .select()
+
+        if (profileError) {
+          console.error('Failed to update user profile:', profileError)
+        } else {
+          console.log('Profile updated successfully:', profileData)
+        }
 
         // Log subscription event
-        await supabase
+        const { data: eventData, error: eventError } = await supabase
           .from('subscription_events')
           .insert({
             user_id: userId,
@@ -70,6 +81,13 @@ export async function POST(request: NextRequest) {
               status: subscription.status,
             },
           })
+          .select()
+
+        if (eventError) {
+          console.error('Failed to log subscription event:', eventError)
+        } else {
+          console.log('Subscription event logged:', eventData)
+        }
 
         break
       }
@@ -87,13 +105,22 @@ export async function POST(request: NextRequest) {
         }
 
         // Downgrade to free tier
-        await supabase
+        console.log(`Downgrading user ${userId} to free tier`)
+        
+        const { data: profileData, error: profileError } = await supabase
           .from('user_profiles')
           .update({ subscription_tier: 'free' })
           .eq('id', userId)
+          .select()
+
+        if (profileError) {
+          console.error('Failed to downgrade user profile:', profileError)
+        } else {
+          console.log('Profile downgraded successfully:', profileData)
+        }
 
         // Log subscription event
-        await supabase
+        const { data: eventData, error: eventError } = await supabase
           .from('subscription_events')
           .insert({
             user_id: userId,
@@ -104,6 +131,13 @@ export async function POST(request: NextRequest) {
               ended_at: subscription.ended_at,
             },
           })
+          .select()
+
+        if (eventError) {
+          console.error('Failed to log cancellation event:', eventError)
+        } else {
+          console.log('Cancellation event logged:', eventData)
+        }
 
         break
       }
