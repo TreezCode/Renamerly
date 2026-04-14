@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Webhook] Received event: ${event.type}`)
     
+    // Use regular client - the security definer function handles privilege elevation
     const supabase = await createClient()
 
     // Handle different event types
@@ -51,16 +52,16 @@ export async function POST(request: NextRequest) {
           break
         }
 
-        // Update user profile with subscription status
+        // Update user profile with subscription status using security definer function
         const tier = subscription.status === 'active' ? 'pro' : 'free'
         
         console.log(`Updating user ${userId} to tier: ${tier}`)
         
         const { data: profileData, error: profileError } = await supabase
-          .from('user_profiles')
-          .update({ subscription_tier: tier })
-          .eq('id', userId)
-          .select()
+          .rpc('update_subscription_tier', {
+            p_user_id: userId,
+            p_tier: tier
+          })
 
         if (profileError) {
           console.error('Failed to update user profile:', profileError)
@@ -104,14 +105,14 @@ export async function POST(request: NextRequest) {
           break
         }
 
-        // Downgrade to free tier
+        // Downgrade to free tier using security definer function
         console.log(`Downgrading user ${userId} to free tier`)
         
         const { data: profileData, error: profileError } = await supabase
-          .from('user_profiles')
-          .update({ subscription_tier: 'free' })
-          .eq('id', userId)
-          .select()
+          .rpc('update_subscription_tier', {
+            p_user_id: userId,
+            p_tier: 'free'
+          })
 
         if (profileError) {
           console.error('Failed to downgrade user profile:', profileError)
