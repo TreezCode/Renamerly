@@ -5,6 +5,19 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import Stripe from 'https://esm.sh/stripe@14.21.0?target=deno'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0'
 
+// Validate required environment variables
+const requiredEnvVars = [
+  'STRIPE_SECRET_KEY',
+  'STRIPE_WEBHOOK_SECRET',
+  'SUPABASE_URL',
+  'SUPABASE_SERVICE_ROLE_KEY',
+]
+
+const missingEnvVars = requiredEnvVars.filter((varName) => !Deno.env.get(varName))
+if (missingEnvVars.length > 0) {
+  console.error('❌ Missing required environment variables:', missingEnvVars)
+}
+
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') as string, {
   apiVersion: '2024-11-20.acacia',
   httpClient: Stripe.createFetchHttpClient(),
@@ -12,7 +25,13 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') as string, {
 
 const cryptoProvider = Stripe.createSubtleCryptoProvider()
 
-console.log('Stripe webhook handler initialized')
+console.log('✅ Stripe webhook handler initialized')
+console.log('📋 Environment check:', {
+  hasStripeKey: !!Deno.env.get('STRIPE_SECRET_KEY'),
+  hasWebhookSecret: !!Deno.env.get('STRIPE_WEBHOOK_SECRET'),
+  hasSupabaseUrl: !!Deno.env.get('SUPABASE_URL'),
+  hasServiceRole: !!Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'),
+})
 
 serve(async (req) => {
   const signature = req.headers.get('stripe-signature')
@@ -87,27 +106,39 @@ serve(async (req) => {
         }
 
         // Log subscription event
+        const eventType =
+          event.type === 'customer.subscription.created'
+            ? 'subscribed'
+            : subscription.status === 'active'
+            ? 'renewed'
+            : 'downgraded'
+
+        const eventPayload = {
+          user_id: userId,
+          event_type: eventType,
+          stripe_subscription_id: subscription.id,
+          metadata: {
+            status: subscription.status,
+          },
+        }
+
+        console.log('📝 Attempting to insert subscription event:', eventPayload)
+
         const { data: eventData, error: eventError } = await supabaseAdmin
           .from('subscription_events')
-          .insert({
-            user_id: userId,
-            event_type:
-              event.type === 'customer.subscription.created'
-                ? 'subscribed'
-                : subscription.status === 'active'
-                ? 'renewed'
-                : 'downgraded',
-            stripe_subscription_id: subscription.id,
-            metadata: {
-              status: subscription.status,
-            },
-          })
+          .insert(eventPayload)
           .select()
 
         if (eventError) {
-          console.error('Failed to log subscription event:', eventError)
+          console.error('❌ Failed to log subscription event:', {
+            error: eventError,
+            code: eventError.code,
+            message: eventError.message,
+            details: eventError.details,
+            hint: eventError.hint,
+          })
         } else {
-          console.log('✅ Subscription event logged:', eventData)
+          console.log('✅ Subscription event logged successfully:', eventData)
         }
 
         break
@@ -142,23 +173,33 @@ serve(async (req) => {
         }
 
         // Log cancellation event
+        const cancelPayload = {
+          user_id: userId,
+          event_type: 'canceled',
+          stripe_subscription_id: subscription.id,
+          metadata: {
+            canceled_at: subscription.canceled_at,
+            ended_at: subscription.ended_at,
+          },
+        }
+
+        console.log('📝 Attempting to insert cancellation event:', cancelPayload)
+
         const { data: eventData, error: eventError } = await supabaseAdmin
           .from('subscription_events')
-          .insert({
-            user_id: userId,
-            event_type: 'canceled',
-            stripe_subscription_id: subscription.id,
-            metadata: {
-              canceled_at: subscription.canceled_at,
-              ended_at: subscription.ended_at,
-            },
-          })
+          .insert(cancelPayload)
           .select()
 
         if (eventError) {
-          console.error('Failed to log cancellation event:', eventError)
+          console.error('❌ Failed to log cancellation event:', {
+            error: eventError,
+            code: eventError.code,
+            message: eventError.message,
+            details: eventError.details,
+            hint: eventError.hint,
+          })
         } else {
-          console.log('✅ Cancellation event logged:', eventData)
+          console.log('✅ Cancellation event logged successfully:', eventData)
         }
 
         break
