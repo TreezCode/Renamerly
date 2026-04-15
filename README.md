@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="public/brand/logo-full.webp" alt="Renamify Logo" width="400" />
+  <img src="public/brand/logo-full.webp" alt="Renamerly Logo" width="400" />
   
-  # Renamify
+  # Renamerly
   
   **Transform messy product images into organized, SEO-friendly files in seconds**
   
@@ -10,16 +10,16 @@
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
   [![Build With Treez](https://img.shields.io/badge/Build_With-Treez-7C3AED)](https://buildwithtreez.com)
   
-  [Live Demo](https://renamify.app) · [Report Bug](https://github.com/TreezCode/Renamify/issues) · [Request Feature](https://github.com/TreezCode/Renamify/issues)
+  [Live Demo](https://renamerly.com) · [Report Bug](https://github.com/TreezCode/Renamerly/issues) · [Request Feature](https://github.com/TreezCode/Renamerly/issues)
 </div>
 
 ---
 
 ## ✨ Overview
 
-Renamify is a powerful, browser-based tool designed for e-commerce professionals who need to organize and rename product images efficiently. Built for Shopify, Etsy, and other online store owners, Renamify transforms chaotic product photo filenames into clean, consistent, SEO-optimized names — all without leaving your browser.
+Renamerly is a powerful, browser-based tool designed for e-commerce professionals who need to organize and rename product images efficiently. Built for Shopify, Etsy, and other online store owners, Renamerly transforms chaotic product photo filenames into clean, consistent, SEO-optimized names — all without leaving your browser.
 
-### **Why Renamify?**
+### **Why Renamerly?**
 
 - 🚀 **Zero Learning Curve** — Drag, drop, done. No tutorials needed.
 - 🔒 **Privacy First** — All processing happens in your browser. Your images never leave your device.
@@ -42,10 +42,10 @@ Renamify is a powerful, browser-based tool designed for e-commerce professionals
 
 ```bash
 # Clone the repository
-git clone https://github.com/TreezCode/Renamify.git
+git clone https://github.com/TreezCode/Renamerly.git
 
 # Navigate to project directory
-cd Renamify
+cd Renamerly
 
 # Install dependencies
 npm install
@@ -54,7 +54,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see Renamify in action.
+Open [http://localhost:3000](http://localhost:3000) to see Renamerly in action.
 
 ### **Build for Production**
 
@@ -91,7 +91,7 @@ npm run start
 Position-aware descriptors that never assign the same label twice in a batch. Perfect for product photography workflows (front, back, side, detail).
 
 ### **2. RAW File Support**
-Upload DNG, NEF, ARW, and other RAW formats. Renamify extracts embedded JPEG previews automatically.
+Upload DNG, NEF, ARW, and other RAW formats. Renamerly extracts embedded JPEG previews automatically.
 
 ### **3. Auto-Iteration Presets**
 Choose your naming pattern:
@@ -102,14 +102,14 @@ Choose your naming pattern:
 Process hundreds of images in a single session. Assign SKUs, rename in bulk, and export everything at once.
 
 ### **5. No Signup Required**
-Start using Renamify immediately. No account, no email, no friction.
+Start using Renamerly immediately. No account, no email, no friction.
 
 ---
 
 ## 📁 Project Structure
 
 ```
-Renamify/
+Renamerly/
 ├── src/
 │   ├── app/                  # Next.js App Router pages
 │   │   ├── page.tsx         # Landing page
@@ -134,7 +134,7 @@ Renamify/
 
 ## 🚀 Deployment
 
-Renamify is optimized for deployment on [Vercel](https://vercel.com):
+Renamerly is optimized for deployment on [Vercel](https://vercel.com):
 
 ```bash
 # Deploy to Vercel
@@ -144,10 +144,17 @@ vercel
 vercel --prod
 ```
 
-**Environment Variables** (optional):
+**Production Domain**: [renamerly.com](https://renamerly.com)
+
+**Environment Variables**:
 - `NEXT_PUBLIC_SITE_URL` — Custom site URL for local development (defaults to `http://localhost:3000`)
 - `VERCEL_URL` — Automatically set by Vercel for preview/production deployments
-- `NEXT_PUBLIC_GA_ID` — Google Analytics tracking ID
+- `VERCEL_ENV` — Set to `production` by Vercel for production deployments
+- `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — Supabase publishable API key
+- `STRIPE_SECRET_KEY` — Stripe API secret key
+- `STRIPE_WEBHOOK_SECRET` — Stripe webhook signing secret
+- `STRIPE_PRICE_ID_PRO` — Stripe Pro plan price ID
 
 ---
 

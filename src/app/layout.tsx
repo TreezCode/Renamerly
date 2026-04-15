@@ -21,13 +21,15 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
+    process.env.VERCEL_ENV === 'production'
+      ? 'https://renamerly.com'
+      : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
       : process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
   ),
   title: {
-    default: "Renamify — Product Image Renaming Tool | Build With Treez",
-    template: "%s | Renamify",
+    default: "Renamerly — Product Image Renaming Tool | Build With Treez",
+    template: "%s | Renamerly",
   },
   description:
     "Transform messy product image filenames into organized, SEO-friendly names in seconds. Batch rename photos for your Shopify or Etsy store with zero learning curve.",
@@ -69,8 +71,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "/",
-    siteName: "Renamify",
-    title: "Renamify — Product Image Renaming Tool",
+    siteName: "Renamerly",
+    title: "Renamerly — Product Image Renaming Tool",
     description:
       "Transform product images into e-commerce ready files in seconds. No signup required.",
     images: [
@@ -78,13 +80,13 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Renamify - Product Image Renaming Tool",
+        alt: "Renamerly - Product Image Renaming Tool",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Renamify — Product Image Renaming Tool",
+    title: "Renamerly — Product Image Renaming Tool",
     description:
       "Transform product images into e-commerce ready files in seconds.",
     images: ["/opengraph-image"],
@@ -111,7 +113,7 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Renamify",
+    "name": "Renamerly",
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
     "offers": {
@@ -119,7 +121,7 @@ export default function RootLayout({
       "price": "0",
       "priceCurrency": "USD"
     },
-    "description": "Transform product images into e-commerce ready files in seconds. Batch rename and organize your product photos with Renamify.",
+    "description": "Transform product images into e-commerce ready files in seconds. Batch rename and organize your product photos with Renamerly.",
     "author": {
       "@type": "Organization",
       "name": "Build With Treez",
