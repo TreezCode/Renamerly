@@ -1,30 +1,49 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { createClient } from '@/lib/supabase/client'
 
 const navLinks = [
   { name: 'How It Works', href: '#how-it-works' },
   { name: 'Features', href: '#features' },
-  { name: 'Pricing', href: '#pricing' },
+  { name: 'Pricing', href: '/pricing' },
 ]
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
   const pathname = usePathname()
   const router = useRouter()
   const isLanding = pathname === '/'
+  const supabase = createClient()
+
+  useEffect(() => {
+    // Get initial user
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user)
+      setLoading(false)
+    })
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [supabase])
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // Close mobile menu first
+    setIsMobileMenuOpen(false)
+    
     if (href.startsWith('#')) {
       e.preventDefault()
-      
-      // Close mobile menu first
-      setIsMobileMenuOpen(false)
       
       if (isLanding) {
         // On landing page, use native scrollIntoView which respects CSS scroll-margin-top
@@ -72,13 +91,22 @@ export function Header() {
           <ul className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <li key={link.name}>
-                <a
-                  href={isLanding ? link.href : '/'}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className="text-sm font-medium text-gray-400 hover:text-treez-cyan transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-treez-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-deep-space rounded-lg px-2 py-1"
-                >
-                  {link.name}
-                </a>
+                {link.href.startsWith('#') ? (
+                  <a
+                    href={isLanding ? link.href : '/'}
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className="text-sm font-medium text-gray-400 hover:text-treez-cyan transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-treez-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-deep-space rounded-lg px-2 py-1"
+                  >
+                    {link.name}
+                  </a>
+                ) : (
+                  <Link
+                    href={link.href}
+                    className="text-sm font-medium text-gray-400 hover:text-treez-cyan transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-treez-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-deep-space rounded-lg px-2 py-1"
+                  >
+                    {link.name}
+                  </Link>
+                )}
               </li>
             ))}
             <li>
@@ -91,12 +119,29 @@ export function Header() {
             </li>
           </ul>
 
-          <div className="hidden md:block">
-            <Link href="/app">
-              <Button variant="primary" size="sm">
-                Try It Free
-              </Button>
-            </Link>
+          <div className="hidden md:flex items-center gap-4">
+            {!loading && (
+              user ? (
+                <Link href="/dashboard">
+                  <Button variant="secondary" size="sm">
+                    Dashboard
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button variant="ghost" size="sm">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/signup">
+                    <Button variant="primary" size="sm">
+                      Sign Up
+                    </Button>
+                  </Link>
+                </>
+              )
+            )}
           </div>
 
           <button
@@ -124,14 +169,25 @@ export function Header() {
           >
             <div className="px-4 py-4 space-y-3">
               {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={isLanding ? link.href : '/'}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className="block text-sm font-medium text-gray-400 hover:text-treez-cyan transition-colors duration-300 py-2"
-                >
-                  {link.name}
-                </a>
+                link.href.startsWith('#') ? (
+                  <a
+                    key={link.name}
+                    href={isLanding ? link.href : '/'}
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    className="block text-sm font-medium text-gray-400 hover:text-treez-cyan transition-colors duration-300 py-2"
+                  >
+                    {link.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-sm font-medium text-gray-400 hover:text-treez-cyan transition-colors duration-300 py-2"
+                  >
+                    {link.name}
+                  </Link>
+                )
               ))}
               <Link
                 href="/app"
@@ -140,12 +196,29 @@ export function Header() {
               >
                 App
               </Link>
-              <div className="pt-2">
-                <Link href="/app" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button variant="primary" size="sm" className="w-full">
-                    Try It Free
-                  </Button>
-                </Link>
+              <div className="pt-2 space-y-2">
+                {!loading && (
+                  user ? (
+                    <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button variant="secondary" size="sm" className="w-full">
+                        Dashboard
+                      </Button>
+                    </Link>
+                  ) : (
+                    <>
+                      <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Button variant="ghost" size="sm" className="w-full">
+                          Login
+                        </Button>
+                      </Link>
+                      <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Button variant="primary" size="sm" className="w-full">
+                          Sign Up
+                        </Button>
+                      </Link>
+                    </>
+                  )
+                )}
               </div>
             </div>
           </motion.div>

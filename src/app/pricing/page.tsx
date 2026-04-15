@@ -1,57 +1,47 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Check, X, Zap, Crown, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { Check, X } from 'lucide-react'
+import { Button } from '@/components/ui/Button'
 
-const pricingPlans = {
-  free: {
+const pricingTiers = [
+  {
     name: 'Free',
     price: '$0',
-    period: 'forever',
+    priceSubtext: '/forever',
     description: 'Perfect for trying out Renamerly',
-    icon: Zap,
     features: [
-      { name: '20 images per session', included: true },
-      { name: 'Auto-iteration naming', included: true },
-      { name: 'RAW file preview', included: true },
-      { name: 'Basic export (ZIP)', included: true },
-      { name: 'Saved projects', included: false },
-      { name: 'Saved templates', included: false },
-      { name: 'RAW processing & conversion', included: false },
-      { name: 'EXIF metadata editing', included: false },
-      { name: 'Export history', included: false },
-      { name: 'Priority support', included: false },
-      { name: 'AI descriptor suggestions', included: false },
+      '20 images per session',
+      'Auto-iteration naming',
+      'RAW file preview',
+      'Basic export (ZIP)',
     ],
     cta: 'Get Started Free',
     ctaLink: '/signup',
     highlighted: false,
   },
-  pro: {
+  {
     name: 'Pro',
     price: '$19',
-    period: 'per month',
+    priceSubtext: '/month',
     description: 'For professionals who need unlimited power',
-    icon: Crown,
+    badge: 'Most Popular',
     features: [
-      { name: 'Unlimited images per session', included: true },
-      { name: 'Auto-iteration naming', included: true },
-      { name: 'RAW file preview', included: true },
-      { name: 'Advanced export options', included: true },
-      { name: 'Unlimited saved projects', included: true },
-      { name: '10 saved templates', included: true },
-      { name: 'RAW processing & conversion', included: true },
-      { name: 'EXIF metadata editing', included: true },
-      { name: '30-day export history', included: true },
-      { name: 'Priority support', included: true },
-      { name: 'AI descriptor suggestions', included: true },
+      'Unlimited images per session',
+      'Unlimited saved projects',
+      '10 saved templates',
+      'RAW processing & conversion',
+      'EXIF metadata editing',
+      '30-day export history',
+      'Priority support',
+      'AI descriptor suggestions',
     ],
     cta: 'Upgrade to Pro',
     ctaLink: '/api/stripe/checkout',
     highlighted: true,
   },
-}
+]
 
 const comparisonFeatures = [
   {
@@ -91,127 +81,136 @@ const comparisonFeatures = [
   },
 ]
 
+const faqs = [
+  {
+    q: 'Can I upgrade or downgrade anytime?',
+    a: 'Yes! You can upgrade to Pro anytime and your card will be charged immediately. If you downgrade, you will have access to Pro features until the end of your billing period.',
+  },
+  {
+    q: 'What happens to my projects if I cancel?',
+    a: 'Your projects remain in our database for 30 days after cancellation. You can reactivate your subscription anytime to restore full access.',
+  },
+  {
+    q: 'Do you offer refunds?',
+    a: 'We offer a 14-day money-back guarantee. If you are not satisfied with Pro, contact us for a full refund.',
+  },
+  {
+    q: 'Are there any hidden fees?',
+    a: 'No. The price you see is what you pay. No setup fees, no hidden charges.',
+  },
+  {
+    q: 'Can I use Renamerly offline?',
+    a: 'Yes! All image processing happens in your browser, so you can work offline. You just need internet to save projects and sync templates.',
+  },
+]
+
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-deep-space text-white pt-24 pb-16">
+    <div className="min-h-screen bg-deep-space text-white py-16 sm:py-20 md:py-28 lg:py-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-treez-purple via-treez-cyan to-treez-pink bg-clip-text text-transparent">
-              Simple, Transparent Pricing
-            </span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 font-display">
+            Simple, Transparent Pricing
           </h1>
-          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto">
-            Start free and upgrade when you're ready for unlimited power
+          <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
+            Start free and upgrade when you are ready for unlimited power
           </p>
-
-          {/* Annual toggle (future feature) */}
-          {/* <div className="flex items-center justify-center gap-4 mt-8">
-            <span className={!isAnnual ? 'text-white' : 'text-gray-400'}>Monthly</span>
-            <button
-              onClick={() => setIsAnnual(!isAnnual)}
-              className="relative w-14 h-7 bg-white/10 rounded-full transition-all duration-300"
-            >
-              <div className={`absolute top-1 left-1 w-5 h-5 bg-treez-purple rounded-full transition-transform duration-300 ${isAnnual ? 'translate-x-7' : ''}`} />
-            </button>
-            <span className={isAnnual ? 'text-white' : 'text-gray-400'}>
-              Annual <span className="text-green-400 text-sm">(Save 20%)</span>
-            </span>
-          </div> */}
         </motion.div>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24">
-          {Object.entries(pricingPlans).map(([key, plan], index) => {
-            const Icon = plan.icon
-            return (
-              <motion.div
-                key={key}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                className={`relative bg-white/5 backdrop-blur-xl border rounded-2xl p-8 transition-all duration-300 hover:scale-105 ${
-                  plan.highlighted
-                    ? 'border-treez-purple shadow-lg shadow-treez-purple/20 lg:-mt-4 lg:pb-12'
-                    : 'border-white/10'
-                }`}
-              >
-                {plan.highlighted && (
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <div className="px-4 py-1 bg-gradient-to-r from-treez-purple to-treez-pink rounded-full text-sm font-semibold">
-                      Most Popular
-                    </div>
-                  </div>
-                )}
+        {/* Pricing Cards - Match Landing Page Style */}
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: { staggerChildren: 0.15 },
+            },
+          }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto mb-24"
+        >
+          {pricingTiers.map((tier) => (
+            <motion.div
+              key={tier.name}
+              variants={{
+                hidden: { opacity: 0, scale: 0.9 },
+                show: { opacity: 1, scale: 1 },
+              }}
+              className={`group relative rounded-xl p-8 transition-all duration-500 isolate ${
+                tier.highlighted
+                  ? 'bg-white/3 backdrop-blur-2xl backdrop-saturate-150 border-2 border-treez-purple/50 shadow-xl shadow-treez-purple/20 md:scale-105 hover:shadow-2xl hover:shadow-treez-purple/30 hover:border-treez-purple/70'
+                  : 'bg-white/2 backdrop-blur-xl backdrop-saturate-120 border border-white/10 shadow-lg shadow-black/20 hover:bg-white/4 hover:border-white/20 hover:shadow-xl hover:shadow-black/30 hover:scale-[1.02]'
+              }`}
+            >
+              {/* Inner glow accent */}
+              <div className={`absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none ${
+                tier.highlighted
+                  ? 'bg-linear-to-br from-treez-purple/10 via-transparent to-treez-cyan/10'
+                  : 'bg-linear-to-br from-white/5 via-transparent to-white/5'
+              }`} />
 
-                {/* Icon */}
-                <div className="flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br from-treez-purple/20 to-treez-cyan/20 border border-treez-purple/30 mb-6">
-                  <Icon className="w-8 h-8 text-treez-purple" />
+              {/* Badge */}
+              {'badge' in tier && tier.badge && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-linear-to-r from-treez-purple to-treez-pink text-white text-sm font-semibold shadow-lg shadow-treez-purple/50">
+                  {tier.badge}
                 </div>
+              )}
 
-                {/* Plan name */}
-                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                <p className="text-gray-400 mb-6">{plan.description}</p>
-
-                {/* Price */}
-                <div className="mb-8">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-5xl font-bold text-white">{plan.price}</span>
-                    <span className="text-gray-400">/{plan.period}</span>
-                  </div>
+              {/* Header */}
+              <div className="relative text-center mb-8">
+                <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
+                <div className="flex items-baseline justify-center gap-1 mb-2">
+                  <span className="text-5xl font-bold text-white">{tier.price}</span>
+                  <span className="text-gray-400">{tier.priceSubtext}</span>
                 </div>
+                <p className="text-sm text-gray-400">{tier.description}</p>
+              </div>
 
-                {/* CTA Button */}
-                <Link
-                  href={plan.ctaLink}
-                  className={`group relative w-full py-4 rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105 overflow-hidden flex items-center justify-center gap-2 ${
-                    plan.highlighted
-                      ? 'bg-gradient-to-r from-treez-purple to-treez-pink shadow-lg hover:shadow-treez-purple/50'
-                      : 'bg-white/10 border border-white/20 hover:bg-white/20'
-                  }`}
-                >
-                  <span className="relative z-10">{plan.cta}</span>
-                  <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-                  {plan.highlighted && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-treez-pink to-treez-purple opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  )}
+              {/* Features */}
+              <ul className="relative space-y-4 mb-8">
+                {tier.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-success shrink-0 mt-0.5" />
+                    <span className="text-gray-300 text-sm">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA */}
+              <div className="relative mt-auto">
+                <Link href={tier.ctaLink} className="block">
+                  <Button
+                    variant={tier.highlighted ? 'primary' : 'secondary'}
+                    size="lg"
+                    className="w-full"
+                  >
+                    {tier.cta}
+                  </Button>
                 </Link>
-
-                {/* Features */}
-                <ul className="mt-8 space-y-4">
-                  {plan.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
-                      {feature.included ? (
-                        <Check className="w-5 h-5 text-treez-cyan shrink-0 mt-0.5" />
-                      ) : (
-                        <X className="w-5 h-5 text-gray-600 shrink-0 mt-0.5" />
-                      )}
-                      <span className={feature.included ? 'text-gray-300' : 'text-gray-600'}>
-                        {feature.name}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            )
-          })}
-        </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
 
         {/* Feature Comparison Table */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8 }}
           className="mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
-            <span className="bg-gradient-to-r from-treez-purple to-treez-cyan bg-clip-text text-transparent">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12 font-display">
+            <span className="bg-linear-to-r from-treez-purple to-treez-cyan bg-clip-text text-transparent">
               Feature Comparison
             </span>
           </h2>
@@ -259,7 +258,7 @@ export default function PricingPage() {
             ))}
           </div>
 
-          {/* Table Headers */}
+          {/* Table Headers - positioned above table */}
           <div className="grid grid-cols-3 gap-4 px-6 py-4 -mt-2">
             <div className="col-span-1"></div>
             <div className="col-span-1 text-center text-sm font-semibold text-gray-400">Free</div>
@@ -272,37 +271,17 @@ export default function PricingPage() {
         {/* FAQ */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="max-w-3xl mx-auto"
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8 }}
+          className="max-w-3xl mx-auto mb-24"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12 font-display">
             Frequently Asked Questions
           </h2>
 
           <div className="space-y-4">
-            {[
-              {
-                q: 'Can I upgrade or downgrade anytime?',
-                a: 'Yes! You can upgrade to Pro anytime and your card will be charged immediately. If you downgrade, you will have access to Pro features until the end of your billing period.',
-              },
-              {
-                q: 'What happens to my projects if I cancel?',
-                a: 'Your projects remain in our database for 30 days after cancellation. You can reactivate your subscription anytime to restore full access.',
-              },
-              {
-                q: 'Do you offer refunds?',
-                a: 'We offer a 14-day money-back guarantee. If you are not satisfied with Pro, contact us for a full refund.',
-              },
-              {
-                q: 'Are there any hidden fees?',
-                a: 'No. The price you see is what you pay. No setup fees, no hidden charges.',
-              },
-              {
-                q: 'Can I use Renamerly offline?',
-                a: 'Yes! All image processing happens in your browser, so you can work offline. You just need internet to save projects and sync templates.',
-              },
-            ].map((faq, idx) => (
+            {faqs.map((faq, idx) => (
               <div
                 key={idx}
                 className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all duration-300"
@@ -317,30 +296,27 @@ export default function PricingPage() {
         {/* Final CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-center mt-24"
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8 }}
+          className="text-center"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-6 font-display">
             Ready to transform your workflow?
           </h2>
           <p className="text-lg text-gray-400 mb-8">
             Start free and upgrade when you need unlimited power.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/signup"
-              className="group relative px-8 py-4 bg-gradient-to-r from-treez-purple to-treez-pink rounded-xl font-semibold text-white shadow-lg hover:shadow-treez-purple/50 transition-all duration-300 hover:scale-105 overflow-hidden flex items-center gap-2"
-            >
-              <span className="relative z-10">Start Free</span>
-              <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-              <div className="absolute inset-0 bg-gradient-to-r from-treez-pink to-treez-purple opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <Link href="/signup">
+              <Button variant="primary" size="lg">
+                Start Free
+              </Button>
             </Link>
-            <Link
-              href="/app"
-              className="px-8 py-4 border-2 border-treez-cyan rounded-xl font-semibold text-treez-cyan hover:bg-treez-cyan/10 transition-all duration-300 hover:scale-105"
-            >
-              Try Demo First
+            <Link href="/app">
+              <Button variant="secondary" size="lg">
+                Try Demo First
+              </Button>
             </Link>
           </div>
         </motion.div>

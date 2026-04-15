@@ -101,18 +101,19 @@ export default function BillingPage() {
   const imagesPercentage = isPro ? 0 : Math.min((imagesUsed / imagesLimit) * 100, 100)
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-3xl sm:text-4xl font-bold mb-2">
-          <span className="bg-gradient-to-r from-treez-purple to-treez-cyan bg-clip-text text-transparent">
-            Billing & Subscription
-          </span>
-        </h1>
-        <p className="text-gray-400">
-          Manage your subscription and view usage statistics
-        </p>
-      </div>
+    <div className="min-h-screen bg-deep-space text-white py-16 sm:py-20 md:py-28">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        {/* Page Header */}
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-2 font-display">
+            <span className="bg-gradient-to-r from-treez-purple to-treez-cyan bg-clip-text text-transparent">
+              Billing & Subscription
+            </span>
+          </h1>
+          <p className="text-gray-400">
+            Manage your subscription and view usage statistics
+          </p>
+        </div>
 
       {/* Current Plan Card */}
       <motion.div
@@ -304,6 +305,7 @@ export default function BillingPage() {
           .
         </p>
       </motion.div>
+      </div>
     </div>
   )
 }
