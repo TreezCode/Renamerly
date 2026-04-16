@@ -18,13 +18,14 @@ interface UseSubscriptionReturn {
 export function useSubscription(): UseSubscriptionReturn {
   const [tier, setTier] = useState<SubscriptionTier>('free')
   const [loading, setLoading] = useState(true)
-  const supabase = createClient()
 
   useEffect(() => {
+    const supabase = createClient()
+
     async function loadSubscription() {
       try {
         const { data: { user } } = await supabase.auth.getUser()
-        
+
         if (!user) {
           setTier('free')
           setLoading(false)
@@ -50,9 +51,9 @@ export function useSubscription(): UseSubscriptionReturn {
 
     loadSubscription()
 
-    // Subscribe to realtime changes
+    const channelName = `subscription_changes_${Math.random().toString(36).slice(2)}`
     const channel = supabase
-      .channel('subscription_changes')
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
@@ -71,7 +72,7 @@ export function useSubscription(): UseSubscriptionReturn {
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [supabase])
+  }, [])
 
   const limits = getSubscriptionLimits(tier)
 
