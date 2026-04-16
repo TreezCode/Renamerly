@@ -2,13 +2,15 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, Package, Check, AlertCircle, Download } from 'lucide-react'
+import { ChevronDown, Package, Check, AlertCircle, Download, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useDroppable } from '@dnd-kit/core'
 import { useAssetStore } from '@/stores/useAssetStore'
 import { AssetImage } from '@/types'
-import { ImageGridTile } from './ImageGridTile'
+import { ImageTableRow } from './ImageTableRow'
 import { exportAsZip } from '@/lib/export'
 import { generateFilename, getFileExtension } from '@/lib/filename'
+
+const PAGE_SIZE = 10
 
 interface SKUProductGroupProps {
   sku: string
@@ -23,9 +25,13 @@ export function SKUProductGroup({ sku, images }: SKUProductGroupProps) {
 
   const [isExporting, setIsExporting] = useState(false)
   const [exportProgress, setExportProgress] = useState(0)
+  const [page, setPage] = useState(0)
 
   const isCollapsed = collapsedSkus.includes(sku)
   const usedDescriptors = getUsedDescriptors(sku)
+
+  const totalPages = Math.ceil(images.length / PAGE_SIZE)
+  const pagedImages = images.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
 
   // Droppable zone for dragging images to this SKU
   const { setNodeRef, isOver } = useDroppable({
@@ -174,14 +180,83 @@ export function SKUProductGroup({ sku, images }: SKUProductGroupProps) {
                 </div>
               )}
 
-              {/* Images Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                <AnimatePresence mode="popLayout">
-                  {images.map((image) => (
-                    <ImageGridTile key={image.id} image={image} sku={sku} />
-                  ))}
-                </AnimatePresence>
+              {/* Images Table */}
+              <div className="rounded-lg border border-white/10 overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-white/10 bg-white/3">
+                      <th className="w-8 pl-3 pr-1 py-2"></th>
+                      <th className="w-6 px-1 py-2"></th>
+                      <th className="px-2 py-2 w-12"></th>
+                      <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wide hidden sm:table-cell">
+                        File
+                      </th>
+                      <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wide">
+                        Descriptor
+                      </th>
+                      <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wide hidden md:table-cell">
+                        New Name
+                      </th>
+                      <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wide hidden lg:table-cell">
+                        SEO
+                      </th>
+                      <th className="w-8 px-2 py-2"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pagedImages.map((image) => (
+                      <ImageTableRow
+                        key={image.id}
+                        image={image}
+                        sku={sku}
+                        usedDescriptors={usedDescriptors}
+                      />
+                    ))}
+                  </tbody>
+                </table>
               </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between mt-2 px-1">
+                  <p className="text-xs text-gray-500">
+                    {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, images.length)} of {images.length}
+                  </p>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => setPage((p) => Math.max(0, p - 1))}
+                      disabled={page === 0}
+                      className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10
+                        disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                      aria-label="Previous page"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setPage(i)}
+                        className={`w-6 h-6 rounded text-xs font-medium transition-all
+                          ${i === page
+                            ? 'bg-treez-purple text-white'
+                            : 'text-gray-500 hover:text-white hover:bg-white/10'
+                          }`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                      disabled={page === totalPages - 1}
+                      className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10
+                        disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                      aria-label="Next page"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* Export Button - Always visible with intelligent state handling */}
               <div className="mt-3 pt-3 border-t border-white/5">
