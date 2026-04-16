@@ -7,8 +7,21 @@ import { CSS } from '@dnd-kit/utilities'
 import { AssetImage } from '@/types'
 import { useAssetStore } from '@/stores/useAssetStore'
 import { DEFAULT_DESCRIPTORS, ITERATION_PRESETS } from '@/lib/constants'
-import { sanitizeString } from '@/lib/filename'
+import { sanitizeString, generateFilename } from '@/lib/filename'
+import { scoreSeoFilename, type SeoGrade } from '@/lib/seo'
 import { FilenamePreview } from './FilenamePreview'
+
+const SEO_BADGE_STYLE: Record<SeoGrade, string> = {
+  good: 'text-success bg-success/10 border-success/20',
+  improve: 'text-warning bg-warning/10 border-warning/20',
+  poor: 'text-error bg-error/10 border-error/20',
+}
+
+const SEO_DOT: Record<SeoGrade, string> = {
+  good: 'bg-success',
+  improve: 'bg-warning',
+  poor: 'bg-error',
+}
 
 interface ImageGridTileProps {
   image: AssetImage
@@ -244,6 +257,27 @@ export function ImageGridTile({ image, sku }: ImageGridTileProps) {
           customDescriptor={image.customDescriptor}
           originalFilename={image.originalName}
         />
+
+        {(() => {
+          const desc =
+            image.descriptor === 'custom'
+              ? (image.customDescriptor ?? '')
+              : (image.descriptor ?? '')
+          if (!sku || !desc) return null
+          const resolved = generateFilename(sku, desc, image.originalName)
+          if (!resolved) return null
+          const { grade, label, tips } = scoreSeoFilename(resolved)
+          return (
+            <span
+              className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5
+                rounded-full border font-medium ${SEO_BADGE_STYLE[grade]}`}
+              title={tips.length > 0 ? tips.join(' · ') : 'Filename looks great for SEO!'}
+            >
+              <span className={`w-1 h-1 rounded-full shrink-0 ${SEO_DOT[grade]}`} />
+              {label}
+            </span>
+          )
+        })()}
       </div>
     </motion.div>
   )

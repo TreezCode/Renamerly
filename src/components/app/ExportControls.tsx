@@ -1,21 +1,29 @@
 'use client'
 
 import { useState } from 'react'
-import { Download, CheckCircle2 } from 'lucide-react'
+import { Download, CheckCircle2, Table2, FileDown, Lock } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useAssetStore } from '@/stores/useAssetStore'
+import { useSubscription } from '@/hooks/useSubscription'
 import { exportAsZip } from '@/lib/export'
 import { generateFilename, getFileExtension } from '@/lib/filename'
+import { buildCsvManifest, downloadCsv, getCsvFilename } from '@/lib/csv'
 import { Button } from '@/components/ui/Button'
+import { UpgradeModal } from '@/components/ui/UpgradeModal'
+import { NamingPreviewTable } from '@/components/app/NamingPreviewTable'
 
 export function ExportControls() {
   const images = useAssetStore((state) => state.images)
   const isExportReady = useAssetStore((state) => state.isExportReady)
   const addToast = useAssetStore((state) => state.addToast)
 
+  const { isPro } = useSubscription()
+
   const [isExporting, setIsExporting] = useState(false)
   const [progress, setProgress] = useState(0)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showPreview, setShowPreview] = useState(false)
+  const [showUpgrade, setShowUpgrade] = useState(false)
 
   const totalImages = images.length
   const readyImages = images.filter((img) => {
@@ -64,7 +72,6 @@ export function ExportControls() {
     setShowSuccess(false)
 
     try {
-      // Only export ready images
       await exportAsZip(
         readyImages,
         (image) => {
@@ -91,11 +98,22 @@ export function ExportControls() {
     }
   }
 
+  function handleExportCsv() {
+    if (!isPro) {
+      setShowUpgrade(true)
+      return
+    }
+    const csv = buildCsvManifest(images)
+    downloadCsv(csv, getCsvFilename())
+    addToast('success', 'Manifest CSV downloaded!', 4000)
+  }
+
   if (totalImages === 0) {
     return null
   }
 
   return (
+    <>
     <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
@@ -121,22 +139,56 @@ export function ExportControls() {
           )}
         </div>
 
-        <Button
-          variant="primary"
-          size="lg"
-          onClick={handleExport}
-          disabled={!canExport || isExporting}
-          className="gap-2 whitespace-nowrap"
-        >
-          {isExporting ? (
-            <>Exporting... {progress}%</>
+        <div className="flex items-center gap-2 flex-wrap justify-end">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setShowPreview(true)}
+            className="gap-1.5 whitespace-nowrap"
+          >
+            <Table2 className="w-4 h-4" />
+            Preview
+          </Button>
+
+          {isPro ? (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleExportCsv}
+              className="gap-1.5 whitespace-nowrap"
+            >
+              <FileDown className="w-4 h-4" />
+              Export CSV
+            </Button>
           ) : (
-            <>
-              <Download className="w-5 h-5" />
-              {allReady ? 'Export All' : `Export Ready (${completeImages})`}
-            </>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setShowUpgrade(true)}
+              className="gap-1.5 whitespace-nowrap opacity-60"
+            >
+              <Lock className="w-3.5 h-3.5" />
+              Export CSV
+            </Button>
           )}
-        </Button>
+
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={handleExport}
+            disabled={!canExport || isExporting}
+            className="gap-2 whitespace-nowrap"
+          >
+            {isExporting ? (
+              <>Exporting... {progress}%</>
+            ) : (
+              <>
+                <Download className="w-5 h-5" />
+                {allReady ? 'Export All' : `Export Ready (${completeImages})`}
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
       {isExporting && (
@@ -157,5 +209,16 @@ export function ExportControls() {
         </motion.div>
       )}
     </div>
+
+    <NamingPreviewTable open={showPreview} onClose={() => setShowPreview(false)} />
+
+    {showUpgrade && (
+      <UpgradeModal
+        isOpen={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        feature="csv"
+      />
+    )}
+    </>
   )
 }

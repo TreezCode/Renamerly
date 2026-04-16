@@ -5,7 +5,7 @@ import { X, Zap, Check, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 
-type UpgradeFeature = 'images' | 'projects' | 'templates' | 'raw' | 'ai' | 'history'
+type UpgradeFeature = 'images' | 'projects' | 'templates' | 'raw' | 'ai' | 'history' | 'csv'
 
 interface UpgradeModalProps {
   isOpen: boolean
@@ -37,6 +37,10 @@ const FEATURE_COPY: Record<UpgradeFeature, { title: string; description: string 
   history: {
     title: 'Export History — Pro Only',
     description: 'Access your last 30 days of exports. Review, re-download, and track everything.',
+  },
+  csv: {
+    title: 'CSV Export — Pro Only',
+    description: 'Download a full product manifest CSV with every filename, SKU, descriptor, and status — ready to paste into Shopify, Etsy, or your catalog.',
   },
 }
 
