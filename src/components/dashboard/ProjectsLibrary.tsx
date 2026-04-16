@@ -14,11 +14,12 @@ import {
   MoreVertical,
   X,
 } from 'lucide-react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useProjects, useDeleteProject } from '@/hooks/useProjects'
+import { useAssetStore } from '@/stores/useAssetStore'
 import { Button } from '@/components/ui/Button'
 import type { Tables } from '@/lib/supabase/database.types'
+import type { ProjectImageMeta } from '@/types'
 
 type Project = Tables<'projects'>
 
@@ -111,6 +112,14 @@ function ProjectCard({
   const router = useRouter()
   const imageCount = getImageCount(project.images)
 
+  function openProject() {
+    const store = useAssetStore.getState()
+    const imageMetadata = Array.isArray(project.images) ? (project.images as unknown as ProjectImageMeta[]) : []
+    store.reset()
+    store.loadProject({ id: project.id, name: project.name, imageMetadata })
+    router.push('/app')
+  }
+
   return (
     <motion.div
       layout
@@ -145,7 +154,7 @@ function ProjectCard({
                 onMouseLeave={() => setMenuOpen(false)}
               >
                 <button
-                  onClick={() => { setMenuOpen(false); router.push(`/app?project=${project.id}`) }}
+                  onClick={() => { setMenuOpen(false); openProject() }}
                   className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-colors w-full text-left"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -184,7 +193,7 @@ function ProjectCard({
 
       {/* Open CTA */}
       <button
-        onClick={() => router.push(`/app?project=${project.id}`)}
+        onClick={openProject}
         className="w-full flex items-center justify-center gap-2 py-2 rounded-xl
           bg-treez-purple/10 hover:bg-treez-purple/20 border border-treez-purple/20 hover:border-treez-purple/40
           text-treez-purple text-sm font-medium transition-all duration-200
@@ -197,7 +206,7 @@ function ProjectCard({
   )
 }
 
-function EmptyState() {
+function EmptyState({ onNewProject }: { onNewProject: () => void }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -211,12 +220,10 @@ function EmptyState() {
       <p className="text-gray-400 text-sm max-w-xs mb-8">
         Start by renaming your first batch of product images. Your saved sessions will appear here.
       </p>
-      <Link href="/app?new=1">
-        <Button variant="primary" size="md">
-          <Plus className="w-4 h-4 mr-2" />
-          Start a New Project
-        </Button>
-      </Link>
+      <Button variant="primary" size="md" onClick={onNewProject}>
+        <Plus className="w-4 h-4 mr-2" />
+        Start a New Project
+      </Button>
     </motion.div>
   )
 }
@@ -224,9 +231,15 @@ function EmptyState() {
 export function ProjectsLibrary({ userId }: ProjectsLibraryProps) {
   const { projects, loading, refetch } = useProjects(userId)
   const { deleteProject, deleting } = useDeleteProject()
+  const router = useRouter()
 
   const [search, setSearch] = useState('')
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null)
+
+  function handleNewProject() {
+    useAssetStore.getState().reset()
+    router.push('/app')
+  }
 
   const filtered = projects.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
@@ -255,12 +268,10 @@ export function ProjectsLibrary({ userId }: ProjectsLibraryProps) {
             {loading ? '...' : `${projects.length} saved project${projects.length !== 1 ? 's' : ''}`}
           </p>
         </div>
-        <Link href="/app?new=1">
-          <Button variant="primary" size="md">
-            <Plus className="w-4 h-4 mr-2" />
-            New Project
-          </Button>
-        </Link>
+        <Button variant="primary" size="md" onClick={handleNewProject}>
+          <Plus className="w-4 h-4 mr-2" />
+          New Project
+        </Button>
       </div>
 
       {/* Search */}
@@ -288,7 +299,7 @@ export function ProjectsLibrary({ userId }: ProjectsLibraryProps) {
           ))}
         </div>
       ) : projects.length === 0 ? (
-        <EmptyState />
+        <EmptyState onNewProject={handleNewProject} />
       ) : filtered.length === 0 ? (
         <motion.p
           initial={{ opacity: 0 }}
