@@ -401,9 +401,17 @@ CREATE TABLE subscription_events (
 
 ---
 
-### Phase 7: Premium Features (Free vs Pro) ⏳ NEXT UP
+### Phase 7: Premium Features (Free vs Pro) ✅ COMPLETE
 **Estimated Duration**: 2-3 sessions  
 **Goal**: Implement tier-gated features
+
+**Completed:**
+- ✅ `UpgradeModal` component — context-aware, reusable, Framer Motion animated
+- ✅ Image limit enforced dynamically from subscription tier (Pro = unlimited)
+- ✅ `UploadZone` — subscription-aware, upgrade modal at limit, near-limit warning
+- ✅ `AppToolbar` — Pro shows ∞ counter, Free shows X/20 with upgrade CTA at cap
+- ✅ Template creation gated behind Pro — `UpgradeModal` shown to free users
+- ✅ `AssetStore.addImages` accepts optional `limit` param (Infinity for Pro)
 
 **Free Tier Limitations**:
 - Max 20 images per session (enforced in upload)
@@ -430,7 +438,7 @@ CREATE TABLE subscription_events (
 
 ---
 
-### Phase 8: Advanced Premium Features
+### Phase 8: Advanced Premium Features ⏳ NEXT UP
 **Estimated Duration**: 4-5 sessions  
 **Goal**: Power-user features for professionals
 
