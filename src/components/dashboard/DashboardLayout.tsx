@@ -37,16 +37,18 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-deep-space text-white">
+    <div className="min-h-screen bg-deep-space text-white overflow-x-hidden">
       <div className="flex">
         {/* Sidebar - Desktop */}
         <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 bg-white/3 backdrop-blur-xl border-r border-white/10">
           <div className="flex flex-col flex-1 p-6">
             {/* Logo/Brand */}
-            <Link href="/" className="mb-8">
-              <h2 className="text-2xl font-bold font-display bg-linear-to-r from-treez-purple to-treez-cyan bg-clip-text text-transparent">
-                Renamerly
-              </h2>
+            <Link href="/" className="mb-8 block">
+              <img
+                src="/brand/logo-full.webp"
+                alt="Renamerly"
+                className="h-10 w-auto"
+              />
             </Link>
 
             {/* Navigation */}
@@ -99,9 +101,11 @@ export function DashboardLayout({ children, user }: DashboardLayoutProps) {
           <header className="lg:hidden sticky top-0 z-40 bg-deep-space/95 backdrop-blur-xl border-b border-white/10">
             <div className="flex items-center justify-between px-4 py-4">
               <Link href="/">
-                <h2 className="text-xl font-bold font-display bg-linear-to-r from-treez-purple to-treez-cyan bg-clip-text text-transparent">
-                  Renamerly
-                </h2>
+                <img
+                  src="/brand/logo-full.webp"
+                  alt="Renamerly"
+                  className="h-8 w-auto"
+                />
               </Link>
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

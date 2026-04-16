@@ -101,8 +101,8 @@ export default function BillingPage() {
   const imagesPercentage = isPro ? 0 : Math.min((imagesUsed / imagesLimit) * 100, 100)
 
   return (
-    <div className="min-h-screen bg-deep-space text-white py-16 sm:py-20 md:py-28">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div className="py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto space-y-8">
         {/* Page Header */}
         <div>
           <h1 className="text-3xl sm:text-4xl font-bold mb-2 font-display">

@@ -1,6 +1,4 @@
-import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
 import { DashboardOverview } from '@/components/dashboard/DashboardOverview'
 
 export default async function DashboardPage() {
@@ -10,9 +8,8 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) {
-    redirect('/login')
-  }
+  // Auth check is in layout.tsx
+  if (!user) return null
 
   // Get user profile for display name
   const { data: profile } = await supabase
@@ -22,18 +19,11 @@ export default async function DashboardPage() {
     .single()
 
   return (
-    <DashboardLayout
-      user={{
-        email: user.email || '',
-        full_name: profile?.full_name || undefined,
-      }}
-    >
-      <div className="py-8 px-4 sm:px-6 lg:px-8">
-        <DashboardOverview
-          userId={user.id}
-          userName={profile?.full_name || user.email?.split('@')[0]}
-        />
-      </div>
-    </DashboardLayout>
+    <div className="py-8 px-4 sm:px-6 lg:px-8">
+      <DashboardOverview
+        userId={user.id}
+        userName={profile?.full_name || user.email?.split('@')[0]}
+      />
+    </div>
   )
 }
