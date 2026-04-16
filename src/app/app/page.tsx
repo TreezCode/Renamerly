@@ -15,6 +15,7 @@ import { SKUProductGroup } from '@/components/app/SKUProductGroup'
 import { ImagesWithoutSKU } from '@/components/app/ImagesWithoutSKU'
 import { ExportControls } from '@/components/app/ExportControls'
 import { OnboardingModal } from '@/components/app/OnboardingModal'
+import { SessionPersistProvider } from '@/components/app/SessionPersistProvider'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 
 function ProjectLoader() {
@@ -102,6 +103,7 @@ export default function AppPage() {
       
       <main className="min-h-screen pt-6 pb-6 sm:pt-8 sm:pb-8 px-4 sm:px-6 lg:px-8">
         <DragDropProvider>
+          <SessionPersistProvider />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

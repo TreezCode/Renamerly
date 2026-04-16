@@ -83,6 +83,7 @@ export interface AssetStore {
   loadProject: (project: { id: string; name: string; imageMetadata?: ProjectImageMeta[] }) => void
   renameCurrentSession: (name: string) => void
   clearPendingProjectMeta: () => void
+  restoreSession: (images: AssetImage[], currentProject: CurrentProject | null) => void
 
   setOnboardingComplete: () => void
   toggleSkuCollapse: (sku: string) => void
