@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { Zap } from 'lucide-react'
 import { useAssetStore } from '@/stores/useAssetStore'
 import { sanitizeString } from '@/lib/filename'
@@ -9,51 +8,38 @@ import { sanitizeString } from '@/lib/filename'
 export function QuickSKUInput() {
   const [sku, setSku] = useState('')
   const images = useAssetStore((state) => state.images)
-  const selectedImageIds = useAssetStore((state) => state.selectedImageIds)
   const setBulkSku = useAssetStore((state) => state.setBulkSku)
   const addToast = useAssetStore((state) => state.addToast)
 
   const imagesWithoutSku = images.filter((img) => !img.sku)
-  const hasSelection = selectedImageIds.length > 0
   const hasImagesWithoutSku = imagesWithoutSku.length > 0
 
   const handleApply = () => {
     const sanitized = sanitizeString(sku)
-    
+
     if (!sanitized) {
       addToast('error', 'Please enter a valid SKU')
       return
     }
 
-    if (hasSelection) {
-      setBulkSku(selectedImageIds, sanitized)
-      addToast('success', `SKU "${sanitized}" applied to ${selectedImageIds.length} image(s)`)
-    } else if (hasImagesWithoutSku) {
+    if (hasImagesWithoutSku) {
       const idsToUpdate = imagesWithoutSku.map((img) => img.id)
       setBulkSku(idsToUpdate, sanitized)
       addToast('success', `SKU "${sanitized}" applied to ${idsToUpdate.length} image(s)`)
     }
-    
+
     setSku('')
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleApply()
-    }
+    if (e.key === 'Enter') handleApply()
   }
 
-  // Hide this panel when images are selected - SelectionActionBar handles it
-  if (images.length === 0 || hasSelection) return null
-
-  const targetCount = hasImagesWithoutSku ? imagesWithoutSku.length : 0
+  const targetCount = imagesWithoutSku.length
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="bg-white/5 backdrop-blur-xl border border-white/10 
+    <div
+      className="bg-white/5 backdrop-blur-xl border border-white/10
         rounded-xl p-3 sm:p-4
         hover:bg-white/10 hover:border-treez-purple/30
         transition-all duration-300"
@@ -87,18 +73,18 @@ export function QuickSKUInput() {
 
         {/* Target Count Badge */}
         {targetCount > 0 && (
-          <span className="hidden sm:inline px-2.5 py-1 rounded-full 
-            bg-linear-to-r from-treez-purple/20 to-treez-cyan/20 
+          <span className="px-2.5 py-1 rounded-full
+            bg-linear-to-r from-treez-purple/20 to-treez-cyan/20
             border border-treez-purple/30 backdrop-blur-sm
             text-treez-cyan text-xs font-medium whitespace-nowrap">
-            → {targetCount}
+            {targetCount} {targetCount === 1 ? 'image' : 'images'}
           </span>
         )}
 
         {/* Apply Button */}
         <button
           onClick={handleApply}
-          disabled={!sku.trim() || targetCount === 0}
+          disabled={!sku.trim() || targetCount === 0 || !hasImagesWithoutSku}
           className="group relative px-4 py-2 rounded-lg
             bg-linear-to-r from-treez-purple to-treez-pink
             text-white text-sm font-semibold
@@ -116,6 +102,6 @@ export function QuickSKUInput() {
             transition-opacity duration-300" />
         </button>
       </div>
-    </motion.div>
+    </div>
   )
 }

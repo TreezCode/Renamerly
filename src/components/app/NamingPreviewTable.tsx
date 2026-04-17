@@ -18,6 +18,7 @@ import { useSubscription } from '@/hooks/useSubscription'
 import { generateFilename } from '@/lib/filename'
 import { scoreSeoFilename, type SeoGrade } from '@/lib/seo'
 import { buildCsvManifest, downloadCsv, getCsvFilename } from '@/lib/csv'
+import { getPresetById } from '@/lib/platformPresets'
 import { UpgradeModal } from '@/components/ui/UpgradeModal'
 import { Button } from '@/components/ui/Button'
 import { DEFAULT_DESCRIPTORS } from '@/lib/constants'
@@ -52,12 +53,28 @@ export function NamingPreviewTable({ open, onClose }: NamingPreviewTableProps) {
   const selectAllInContext = useAssetStore((state) => state.selectAllInContext)
   const clearSelection = useAssetStore((state) => state.clearSelection)
 
+  const activePlatformPreset = useAssetStore((state) => state.activePlatformPreset)
   const { isPro } = useSubscription()
+
+  const preset = getPresetById(activePlatformPreset)
 
   const [sortField, setSortField] = useState<SortField>('original')
   const [sortDir, setSortDir] = useState<SortDir>('asc')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
   const [showUpgrade, setShowUpgrade] = useState(false)
+
+  const positionMap = useMemo(() => {
+    const counters = new Map<string, number>()
+    const map = new Map<string, number>()
+    images.forEach((img) => {
+      if (img.sku) {
+        const count = (counters.get(img.sku) ?? 0) + 1
+        counters.set(img.sku, count)
+        map.set(img.id, count)
+      }
+    })
+    return map
+  }, [images])
 
   const rows = useMemo(() => {
     return images.map((image) => {
@@ -65,16 +82,17 @@ export function NamingPreviewTable({ open, onClose }: NamingPreviewTableProps) {
         image.descriptor === 'custom'
           ? (image.customDescriptor ?? '')
           : (image.descriptor ?? '')
+      const position = positionMap.get(image.id) ?? 1
       const newName =
         image.sku && descriptor
-          ? generateFilename(image.sku, descriptor, image.originalName)
+          ? generateFilename(image.sku, descriptor, image.originalName, preset, position)
           : ''
       const isComplete = !!(image.sku && descriptor)
       const seoResult = newName ? scoreSeoFilename(newName) : null
 
       return { image, descriptor, newName, isComplete, seoResult }
     })
-  }, [images])
+  }, [images, preset, positionMap])
 
   const filtered = useMemo(() => {
     if (statusFilter === 'all') return rows
@@ -141,7 +159,7 @@ export function NamingPreviewTable({ open, onClose }: NamingPreviewTableProps) {
       setShowUpgrade(true)
       return
     }
-    const csv = buildCsvManifest(images)
+    const csv = buildCsvManifest(images, preset)
     downloadCsv(csv, getCsvFilename())
   }
 

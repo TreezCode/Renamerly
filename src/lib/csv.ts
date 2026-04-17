@@ -1,5 +1,6 @@
 import type { AssetImage } from '@/types'
 import { generateFilename } from '@/lib/filename'
+import type { PlatformPreset } from '@/lib/platformPresets'
 
 type CsvValue = string | number | null
 
@@ -17,6 +18,7 @@ export const CSV_HEADERS = [
   'new_filename',
   'sku',
   'descriptor',
+  'alt_text',
   'status',
   'file_type',
   'file_size_kb',
@@ -28,16 +30,27 @@ export type CsvHeader = (typeof CSV_HEADERS)[number]
  * Builds a CSV manifest string from the current session's images.
  * Includes all images (complete and incomplete).
  */
-export function buildCsvManifest(images: AssetImage[]): string {
+export function buildCsvManifest(images: AssetImage[], preset?: PlatformPreset | null): string {
+  const skuCounters = new Map<string, number>()
+  const positionMap = new Map<string, number>()
+  images.forEach((img) => {
+    if (img.sku) {
+      const count = (skuCounters.get(img.sku) ?? 0) + 1
+      skuCounters.set(img.sku, count)
+      positionMap.set(img.id, count)
+    }
+  })
+
   const rows = images.map((image) => {
     const descriptor =
       image.descriptor === 'custom'
         ? (image.customDescriptor ?? '')
         : (image.descriptor ?? '')
 
+    const position = positionMap.get(image.id) ?? 1
     const newFilename =
       image.sku && descriptor
-        ? generateFilename(image.sku, descriptor, image.originalName)
+        ? generateFilename(image.sku, descriptor, image.originalName, preset, position)
         : ''
 
     const isComplete = !!(image.sku && descriptor)
@@ -53,6 +66,7 @@ export function buildCsvManifest(images: AssetImage[]): string {
       new_filename: newFilename,
       sku: image.sku ?? '',
       descriptor,
+      alt_text: image.altText ?? '',
       status: isComplete ? 'complete' : 'incomplete',
       file_type: ext,
       file_size_kb: fileSizeKb,

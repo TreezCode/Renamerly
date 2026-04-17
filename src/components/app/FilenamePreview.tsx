@@ -1,4 +1,8 @@
-import { generateFilename, isFilenameComplete, getFileExtension } from '@/lib/filename'
+'use client'
+
+import { generateFilename, isFilenameComplete } from '@/lib/filename'
+import { getPresetById } from '@/lib/platformPresets'
+import { useAssetStore } from '@/stores/useAssetStore'
 import { AlertCircle, Check } from 'lucide-react'
 
 interface FilenamePreviewProps {
@@ -14,9 +18,11 @@ export function FilenamePreview({
   customDescriptor,
   originalFilename,
 }: FilenamePreviewProps) {
-  const extension = getFileExtension(originalFilename)
+  const activePlatformPreset = useAssetStore((state) => state.activePlatformPreset)
+  const preset = getPresetById(activePlatformPreset)
+
   const finalDescriptor = descriptor === 'custom' ? (customDescriptor || '') : (descriptor || '')
-  const filename = generateFilename(sku, finalDescriptor, extension)
+  const filename = generateFilename(sku, finalDescriptor, originalFilename, preset)
   const isComplete = isFilenameComplete(sku, finalDescriptor)
 
   if (!isComplete) {

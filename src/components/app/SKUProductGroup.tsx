@@ -7,8 +7,11 @@ import { useDroppable } from '@dnd-kit/core'
 import { useAssetStore } from '@/stores/useAssetStore'
 import { AssetImage } from '@/types'
 import { ImageTableRow } from './ImageTableRow'
+import { useSubscription } from '@/hooks/useSubscription'
 import { exportAsZip } from '@/lib/export'
-import { generateFilename, getFileExtension } from '@/lib/filename'
+import { generateFilename } from '@/lib/filename'
+import { buildCsvManifest } from '@/lib/csv'
+import { getPresetById, PLATFORM_PRESETS } from '@/lib/platformPresets'
 
 const PAGE_SIZE = 10
 
@@ -22,6 +25,11 @@ export function SKUProductGroup({ sku, images }: SKUProductGroupProps) {
   const toggleSkuCollapse = useAssetStore((state) => state.toggleSkuCollapse)
   const getUsedDescriptors = useAssetStore((state) => state.getUsedDescriptors)
   const addToast = useAssetStore((state) => state.addToast)
+  const activePlatformPreset = useAssetStore((state) => state.activePlatformPreset)
+
+  const { isPro } = useSubscription()
+
+  const preset = getPresetById(activePlatformPreset)
 
   const [isExporting, setIsExporting] = useState(false)
   const [exportProgress, setExportProgress] = useState(0)
@@ -51,16 +59,20 @@ export function SKUProductGroup({ sku, images }: SKUProductGroupProps) {
     setExportProgress(0)
 
     try {
+      const positionMap = new Map<string, number>()
+      images.forEach((img, idx) => positionMap.set(img.id, idx + 1))
+
+      const manifest = buildCsvManifest(images, preset)
       await exportAsZip(
         images,
         (image) => {
           const descriptor = image.descriptor === 'custom'
             ? (image.customDescriptor || '')
             : (image.descriptor || '')
-          const extension = getFileExtension(image.originalName)
-          return generateFilename(sku, descriptor, extension)
+          return generateFilename(sku, descriptor, image.originalName, preset, positionMap.get(image.id) ?? 1)
         },
-        (percent) => setExportProgress(Math.round(percent))
+        (percent) => setExportProgress(Math.round(percent)),
+        manifest
       )
 
       addToast('success', `${sku} exported successfully!`, 4000)
@@ -195,7 +207,14 @@ export function SKUProductGroup({ sku, images }: SKUProductGroupProps) {
                         Descriptor
                       </th>
                       <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wide hidden md:table-cell">
-                        New Name
+                        <span className="flex items-center gap-1.5">
+                          New Name
+                          {activePlatformPreset !== 'generic' && (
+                            <span className="normal-case text-[9px] font-medium text-treez-purple bg-treez-purple/10 border border-treez-purple/20 px-1.5 py-0.5 rounded-full tracking-normal">
+                              {PLATFORM_PRESETS.find((p) => p.id === activePlatformPreset)?.label}
+                            </span>
+                          )}
+                        </span>
                       </th>
                       <th className="px-3 py-2 text-left text-[11px] font-medium text-gray-500 uppercase tracking-wide hidden lg:table-cell">
                         SEO
@@ -204,12 +223,14 @@ export function SKUProductGroup({ sku, images }: SKUProductGroupProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {pagedImages.map((image) => (
+                    {pagedImages.map((image, idx) => (
                       <ImageTableRow
                         key={image.id}
                         image={image}
                         sku={sku}
                         usedDescriptors={usedDescriptors}
+                        position={page * PAGE_SIZE + idx + 1}
+                        isPro={isPro}
                       />
                     ))}
                   </tbody>

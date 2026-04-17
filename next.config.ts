@@ -6,7 +6,7 @@ const ContentSecurityPolicy = `
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: blob:;
   font-src 'self' data:;
-  connect-src 'self' https://*.supabase.co https://accounts.google.com https://github.com;
+  connect-src 'self' https://*.supabase.co wss://*.supabase.co https://accounts.google.com https://github.com;
   media-src 'self' blob:;
   object-src 'none';
   base-uri 'self';
@@ -51,6 +51,12 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Reduces initial server memory — pages are loaded on first request instead of pre-cached on boot
+    preloadEntriesOnStart: false,
+    // Reduces peak Webpack memory during production builds
+    webpackMemoryOptimizations: true,
+  },
   async headers() {
     return [
       {

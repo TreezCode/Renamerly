@@ -4,7 +4,8 @@ import { AssetImage } from '@/types'
 export async function exportAsZip(
   images: AssetImage[],
   getFilename: (image: AssetImage) => string,
-  onProgress?: (percent: number) => void
+  onProgress?: (percent: number) => void,
+  manifest?: string
 ): Promise<void> {
   if (!images || images.length === 0) {
     throw new Error('No images to export')
@@ -12,6 +13,11 @@ export async function exportAsZip(
 
   try {
     const zip = new JSZip()
+
+    // Bundle manifest CSV alongside the images when provided
+    if (manifest) {
+      zip.file('renamerly-manifest.csv', manifest)
+    }
 
     // Add files to zip with error handling for each image
     for (const image of images) {

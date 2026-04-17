@@ -155,6 +155,7 @@ export async function loadSession(): Promise<{
           sku: imgMeta.sku,
           descriptor: imgMeta.descriptor,
           customDescriptor: imgMeta.customDescriptor,
+          altText: (imgMeta as AssetImage).altText ?? null,
         } satisfies AssetImage
       })
     )

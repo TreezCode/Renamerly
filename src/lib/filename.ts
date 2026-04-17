@@ -1,4 +1,5 @@
 import { FILENAME_REGEX } from '@/lib/constants'
+import type { PlatformPreset } from '@/lib/platformPresets'
 
 const MAX_FILENAME_LENGTH = 100
 
@@ -31,14 +32,22 @@ export function getFileExtension(filename: string): string {
 export function generateFilename(
   sku: string,
   descriptor: string,
-  originalFilename: string
+  originalFilename: string,
+  preset?: PlatformPreset | null,
+  position = 1
 ): string {
   const sanitizedSku = sanitizeString(sku)
   const sanitizedDescriptor = sanitizeString(descriptor)
   const extension = getFileExtension(originalFilename)
 
-  if (!sanitizedSku || !sanitizedDescriptor) return ''
+  if (!sanitizedSku) return ''
 
+  if (preset && preset.id !== 'generic') {
+    const date = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+    return preset.format({ sku: sanitizedSku, descriptor: sanitizedDescriptor, extension, position, date })
+  }
+
+  if (!sanitizedDescriptor) return ''
   return `${sanitizedSku}-${sanitizedDescriptor}${extension}`
 }
 

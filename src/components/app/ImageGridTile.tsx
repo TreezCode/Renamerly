@@ -9,6 +9,7 @@ import { useAssetStore } from '@/stores/useAssetStore'
 import { DEFAULT_DESCRIPTORS, ITERATION_PRESETS } from '@/lib/constants'
 import { sanitizeString, generateFilename } from '@/lib/filename'
 import { scoreSeoFilename, type SeoGrade } from '@/lib/seo'
+import { getPresetById } from '@/lib/platformPresets'
 import { FilenamePreview } from './FilenamePreview'
 
 const SEO_BADGE_STYLE: Record<SeoGrade, string> = {
@@ -37,6 +38,9 @@ export function ImageGridTile({ image, sku }: ImageGridTileProps) {
   const addToast = useAssetStore((state) => state.addToast)
   const selectedImageIds = useAssetStore((state) => state.selectedImageIds)
   const toggleImageSelection = useAssetStore((state) => state.toggleImageSelection)
+  const activePlatformPreset = useAssetStore((state) => state.activePlatformPreset)
+
+  const preset = getPresetById(activePlatformPreset)
 
   const usedDescriptors = getUsedDescriptors(sku)
   const isSelected = selectedImageIds.includes(image.id)
@@ -264,7 +268,7 @@ export function ImageGridTile({ image, sku }: ImageGridTileProps) {
               ? (image.customDescriptor ?? '')
               : (image.descriptor ?? '')
           if (!sku || !desc) return null
-          const resolved = generateFilename(sku, desc, image.originalName)
+          const resolved = generateFilename(sku, desc, image.originalName, preset)
           if (!resolved) return null
           const { grade, label, tips } = scoreSeoFilename(resolved)
           return (

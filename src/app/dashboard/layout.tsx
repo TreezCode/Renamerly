@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
+import { SubscriptionProvider } from '@/contexts/SubscriptionContext'
 
 export default async function DashboardLayoutWrapper({
   children,
@@ -25,13 +26,15 @@ export default async function DashboardLayoutWrapper({
     .single()
 
   return (
-    <DashboardLayout
-      user={{
-        email: user.email || '',
-        full_name: profile?.full_name || undefined,
-      }}
-    >
-      {children}
-    </DashboardLayout>
+    <SubscriptionProvider>
+      <DashboardLayout
+        user={{
+          email: user.email || '',
+          full_name: profile?.full_name || undefined,
+        }}
+      >
+        {children}
+      </DashboardLayout>
+    </SubscriptionProvider>
   )
 }

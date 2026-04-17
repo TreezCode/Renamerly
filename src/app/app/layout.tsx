@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { WorkspaceLayout } from '@/components/app/WorkspaceLayout'
+import { SubscriptionProvider } from '@/contexts/SubscriptionContext'
 
 export default async function AppLayoutWrapper({
   children,
@@ -25,5 +26,9 @@ export default async function AppLayoutWrapper({
     }
   }
 
-  return <WorkspaceLayout user={userInfo}>{children}</WorkspaceLayout>
+  return (
+    <SubscriptionProvider>
+      <WorkspaceLayout user={userInfo}>{children}</WorkspaceLayout>
+    </SubscriptionProvider>
+  )
 }
