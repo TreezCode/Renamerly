@@ -40,8 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# unlighthouse / lighthouse reports
+# unlighthouse / lighthouse reports (see scripts/lighthouse-audit.mjs)
 .unlighthouse/
+.lighthouse/
 lighthouse-*.html
 lighthouse-*.json
 
