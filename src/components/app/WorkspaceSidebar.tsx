@@ -487,8 +487,8 @@ export function WorkspaceSidebar({ user, isCollapsed, onToggleCollapse }: Worksp
           {/* Collapse toggle */}
           <button
             onClick={onToggleCollapse}
-            className={`flex items-center py-2.5 mt-1 w-full rounded-xl text-gray-600
-              hover:text-gray-300 hover:bg-white/5 transition-all duration-200
+            className={`flex items-center py-2.5 mt-1 w-full rounded-xl text-gray-400
+              hover:text-gray-200 hover:bg-white/5 transition-all duration-200
               ${isCollapsed ? 'justify-center px-0' : 'gap-3 px-3'}`}
             aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
