@@ -10,9 +10,9 @@
 
 ## Progress snapshot
 
-**Code-complete tasks:** sitemap/robots canonical URL fix, `/pricing` added to sitemap, per-page metadata on `/pricing`+`/app`+`/(auth)`, auth routes marked noindex, GA4 script wired (`NEXT_PUBLIC_GA_ID`), fake `aggregateRating` removed, OAuth callback prod-host guard, branded 404 page, IndexNow key file.
+**Code-complete tasks:** sitemap/robots canonical URL fix, `/pricing` in sitemap, per-page metadata on `/pricing`+`/app`+`/(auth)`, auth routes noindex, GA4 script wired, `file_exported` / `sign_up` / `subscribe` GA4 events firing, OAuth callback prod-host guard, branded 404 page, IndexNow key file, **Organization + WebSite + SoftwareApplication JSON-LD** (with sameAs social links), **FAQPage + Product/Offer JSON-LD on /pricing**, **AI-crawler allow rules in robots.ts**, **public/llms.txt**.
 
-**Your turn next:** Set `NEXT_PUBLIC_GA_ID` in Vercel, verify domain in GSC, submit sitemap, ping IndexNow, update `robots.ts` with AI crawlers + `llms.txt`.
+**Your turn next:** Mark GA4 key events (once events have fired in production), activate IndexNow (ping the activation URL after deploy), validate structured data at <https://search.google.com/test/rich-results>, optionally provide Microsoft Clarity project ID.
 
 ---
 
@@ -66,14 +66,16 @@
 - ✅ `/(auth)` group — noindex, nofollow applied to all login/signup/reset pages (`src/app/(auth)/layout.tsx`).
 - 🔧 Future: per-page metadata for `/blog/[slug]`, `/changelog`, `/about` as those routes are created.
 
-### 2.4 Structured data (JSON-LD) 🔧 / ✅
+### 2.4 Structured data (JSON-LD) ✅ / 🔧
 - ✅ `SoftwareApplication` schema in root layout (fake `aggregateRating` removed).
-- 🔧 **Add `Organization` schema** (sitewide) — name, url, logo, sameAs links. Ready to implement once you have your social profile URLs (see Phase 5.2).
-- 🔧 **Add `FAQPage` schema** on landing page and `/pricing` — high-value for AI Overviews and rich results.
-- 🔧 **Add `Product` + `Offer` schema** on `/pricing` for each plan.
-- 🔧 **Add `BreadcrumbList`** on nested pages once blog/docs exist.
-- 🔧 **Add `HowTo` schema** on any tutorial pages.
-- 👤 Validate at <https://validator.schema.org/> and <https://search.google.com/test/rich-results> after each addition.
+- ✅ `Organization` schema (sitewide) with `sameAs` → Twitter, LinkedIn, GitHub, YouTube.
+- ✅ `WebSite` schema linked to the organization via `@id`.
+- ✅ `FAQPage` schema on `/pricing` (5 Qs pulled from the page's FAQ section).
+- ✅ `Product` + `Offer` schema on `/pricing` for Free and Pro plans (Pro has `UnitPriceSpecification` for monthly billing).
+- 🔧 `FAQPage` schema on landing page — pending your FAQ copy (or we can lift a subset from `/pricing`).
+- 🔧 `BreadcrumbList` on nested pages once blog/docs exist.
+- 🔧 `HowTo` schema on any tutorial pages.
+- 👤 Validate at <https://validator.schema.org/> and <https://search.google.com/test/rich-results> after deploy.
 
 ### 2.5 Core Web Vitals 👤 / 🔧
 - 👤 Run `npx @unlighthouse/cli --site https://renamerly.com` after deploy and share results.
@@ -191,11 +193,11 @@ Once you have these URLs, tell Cascade and the `Organization` schema block will 
 - Structured data (Phase 2.4) is the main lever. Once FAQPage + Organization are added, this is largely done.
 - Plain-language summaries under H1 on landing page — review and adjust on request.
 
-### 6.2 llms.txt 🔧
-- Ready to create `public/llms.txt` now. Waiting on: blog URLs, social profile URLs, pricing values to be confirmed. Say the word and it's done.
+### 6.2 llms.txt ✅
+- `public/llms.txt` created — summary, audience, features, pricing, core URLs, FAQ shape, brand entity links. Update when blog ships.
 
-### 6.3 AI crawler rules in robots.ts 🔧
-- Ready to add explicit allow rules for GPTBot, OAI-SearchBot, PerplexityBot, Google-Extended, ClaudeBot, anthropic-ai, Applebot-Extended, CCBot. One edit, ready to go now.
+### 6.3 AI crawler rules in robots.ts ✅
+- `src/app/robots.ts` now emits explicit rules for GPTBot, OAI-SearchBot, ChatGPT-User, PerplexityBot, Perplexity-User, Google-Extended, ClaudeBot, anthropic-ai, Claude-Web, Applebot-Extended, CCBot, Bytespider, Amazonbot. All allow `/` and disallow `/api/`, `/dashboard/`, `/auth/`. `host` directive set to canonical domain.
 
 ### 6.4 Content shape for citations 👤 / 🔧
 - Write comparison/listicle/HowTo content (Phase 4.2).
@@ -242,24 +244,25 @@ Once you have these URLs, tell Cascade and the `Organization` schema block will 
 ## Master checklist
 
 ### ✅ Already done (in codebase)
-- [x] `sitemap.ts` + `robots.ts` canonical URL fixed (hard-codes `https://renamerly.com` in prod)
-- [x] `/pricing` added to sitemap (priority 0.9)
+- [x] `sitemap.ts` + `robots.ts` canonical URL fixed
+- [x] `/pricing` added to sitemap
 - [x] Per-page `Metadata` on `/pricing`, `/app`
 - [x] Auth routes (`/(auth)`) marked `noindex, nofollow`
 - [x] Fake `aggregateRating` removed from JSON-LD
-- [x] GA4 `<Script>` wired in root layout (activates when `NEXT_PUBLIC_GA_ID` is set)
-- [x] OAuth callback prod-host guard (logs + redirects if localhost hit in production)
-- [x] Custom 404 page (`src/app/not-found.tsx`)
-- [x] IndexNow key file (`public/98c6b6e0b75e4768b7ce155096d79ce5.txt`)
+- [x] GA4 `<Script>` wired in root layout
+- [x] GA4 events firing: `file_exported`, `sign_up`, `subscribe`
+- [x] OAuth callback prod-host guard
+- [x] Custom 404 page
+- [x] IndexNow key file
+- [x] **Organization + WebSite + SoftwareApplication JSON-LD** (root layout)
+- [x] **FAQPage + Product/Offer JSON-LD** on `/pricing`
+- [x] **AI-crawler allow rules** in `robots.ts`
+- [x] **`public/llms.txt`**
 
-### 🔧 Ask Cascade to do
-- [ ] Add `Organization` JSON-LD (need your social profile URLs first)
-- [ ] Add `FAQPage` JSON-LD to landing page (need the FAQ questions)
-- [ ] Add `Product` + `Offer` JSON-LD on `/pricing`
-- [ ] Add AI-crawler allow rules to `robots.ts`
-- [ ] Create `public/llms.txt`
+### 🔧 Ask Cascade to do (optional / blocked)
+- [ ] Add `FAQPage` JSON-LD to landing page (need FAQ copy)
 - [ ] Add Microsoft Clarity script (need your Clarity project ID)
-- [ ] Scaffold `/blog` route + post layout + `Article`/`BreadcrumbList` JSON-LD template
+- [ ] Scaffold `/blog` route + `Article`/`BreadcrumbList` template (need CMS decision)
 - [ ] Audit `<img>` → `next/image` conversions on landing page
 - [ ] Add footer nav links to all top-level pages
 

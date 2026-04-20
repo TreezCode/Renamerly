@@ -110,24 +110,51 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const siteUrl = "https://renamerly.com"
+
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Renamerly",
-    "applicationCategory": "UtilitiesApplication",
-    "operatingSystem": "Web",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "description": "Transform product images into e-commerce ready files in seconds. Batch rename and organize your product photos with Renamerly.",
-    "author": {
-      "@type": "Organization",
-      "name": "Build With Treez",
-      "url": "https://buildwithtreez.com"
-    },
-    "screenshot": "/opengraph-image"
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://buildwithtreez.com/#organization",
+        "name": "Build With Treez",
+        "url": "https://buildwithtreez.com",
+        "logo": `${siteUrl}/brand/android-chrome-512x512.png`,
+        "sameAs": [
+          "https://twitter.com/buildwithtreez",
+          "https://www.linkedin.com/company/build-with-treez/",
+          "https://github.com/TreezCode",
+          "https://www.youtube.com/@buildwithtreez",
+        ],
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        "url": siteUrl,
+        "name": "Renamerly",
+        "publisher": { "@id": "https://buildwithtreez.com/#organization" },
+        "inLanguage": "en-US",
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": `${siteUrl}/#software`,
+        "name": "Renamerly",
+        "url": siteUrl,
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+        },
+        "description":
+          "Transform product images into e-commerce ready files in seconds. Batch rename and organize your product photos with Renamerly.",
+        "author": { "@id": "https://buildwithtreez.com/#organization" },
+        "publisher": { "@id": "https://buildwithtreez.com/#organization" },
+        "screenshot": `${siteUrl}/opengraph-image`,
+      },
+    ],
   }
 
   const gaId = process.env.NEXT_PUBLIC_GA_ID

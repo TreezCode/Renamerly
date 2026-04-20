@@ -1,0 +1,62 @@
+# Renamerly
+
+> Renamerly is a browser-based batch image renaming tool for e-commerce sellers. It transforms messy product image filenames (IMG_4821.jpg) into SEO-friendly, platform-ready names (red-wool-sweater-front.jpg) in seconds. All processing happens client-side — no uploads, no signup required for free usage.
+
+## Who it's for
+
+- Shopify, Etsy, and Amazon product sellers who need consistent image naming
+- Product photographers delivering assets to clients
+- E-commerce agencies managing catalogs across multiple stores
+- Anyone batch-renaming photos with SKU + descriptor conventions
+
+## Key features
+
+- Batch rename up to 500+ product images per session (Pro; 20/session Free)
+- Auto-iteration naming (SKU-descriptor-01.jpg, SKU-descriptor-02.jpg)
+- Platform presets for Shopify, Etsy, Amazon naming conventions
+- RAW file preview (CR2, NEF, ARW, DNG, ORF, RAF) and Pro conversion
+- EXIF metadata editing (Pro)
+- AI descriptor suggestions powered by image analysis (Pro)
+- CSV manifest export mapping original → new filenames (Pro)
+- Client-side processing — images never leave the user's browser
+- ZIP export with bundled manifest
+
+## Pricing
+
+- **Free:** $0/month. 20 images per session. ZIP export. No signup required.
+- **Pro:** $19/month. Unlimited images, unlimited saved projects, 10 templates, RAW processing, EXIF editing, AI suggestions, 30-day export history, priority support. 14-day money-back guarantee.
+
+Pricing page: https://renamerly.com/pricing
+
+## Core pages
+
+- [Home](https://renamerly.com/): Product overview and primary CTA
+- [Pricing](https://renamerly.com/pricing): Free vs. Pro comparison and FAQ
+- [Workspace](https://renamerly.com/app): The actual renaming tool (no signup required to try)
+- [Sign up](https://renamerly.com/signup): Create a free account to save projects
+- [Sign in](https://renamerly.com/login): Existing users
+
+## Common questions Renamerly answers
+
+- How do I rename product images for Shopify?
+- What's the best file naming convention for Etsy product photos?
+- How do I batch rename images without losing EXIF data?
+- What's an SEO-friendly image file name?
+- How should I name product images for Amazon listings?
+- Can I batch rename RAW camera files?
+- What's the difference between Bulk Rename Utility and Renamerly?
+
+## Made by
+
+Build With Treez — https://buildwithtreez.com
+- LinkedIn: https://www.linkedin.com/company/build-with-treez/
+- GitHub: https://github.com/TreezCode
+- YouTube: https://www.youtube.com/@buildwithtreez
+- Twitter/X: https://twitter.com/buildwithtreez
+
+## Technical
+
+- Platform: Web (browser-based, no install)
+- Works offline after initial load
+- Privacy: images processed entirely client-side; never uploaded to a server
+- Supported formats: JPG, PNG, WebP, TIFF, HEIC, and RAW (CR2, NEF, ARW, DNG, ORF, RAF)
