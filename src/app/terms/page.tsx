@@ -87,7 +87,7 @@ export default function TermsPage() {
             <h3 className="text-lg font-semibold text-white mt-6 mb-2">3.2 Pro plan</h3>
             <ul className="list-disc pl-6 space-y-2">
               <li>
-                Pro is billed <strong>$19 per month</strong> in U.S. dollars, processed by Stripe.
+                Pro is billed <strong>$9 per month</strong> in U.S. dollars, processed by Stripe.
                 The subscription renews automatically until you cancel.
               </li>
               <li>You can cancel anytime from the billing page. Pro features remain available until the end of the current billing period.</li>

@@ -3,7 +3,10 @@
  * 
  * Pricing:
  * - Free: $0/month (20 images/session, no projects, no templates)
- * - Pro: $19/month (unlimited images, unlimited projects, 10 templates)
+ * - Pro: $9/month (unlimited images, unlimited projects, 10 templates)
+ *
+ * Note: this value is the display price only. The source of truth is the
+ * Stripe Price object referenced by STRIPE_PRICE_ID_PRO. Keep them in sync.
  */
 
 export const STRIPE_CONFIG = {
@@ -25,7 +28,7 @@ export const STRIPE_CONFIG = {
     },
     pro: {
       name: 'Pro',
-      price: 19,
+      price: 9,
       priceId: process.env.STRIPE_PRICE_ID_PRO || 'price_placeholder',
       features: {
         imagesPerSession: -1, // unlimited

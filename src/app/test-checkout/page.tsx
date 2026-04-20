@@ -57,7 +57,7 @@ export default function TestCheckout() {
         <div className="mb-6 p-4 bg-white/5 rounded-lg border border-white/10">
           <div className="flex items-center justify-between mb-2">
             <span className="text-white/80">Renamerly Pro</span>
-            <span className="text-2xl font-bold text-white">$19/mo</span>
+            <span className="text-2xl font-bold text-white">$9/mo</span>
           </div>
           <ul className="text-sm text-white/60 space-y-1">
             <li>✓ Unlimited images</li>

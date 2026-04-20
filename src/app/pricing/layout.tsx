@@ -92,14 +92,14 @@ export default function PricingLayout({ children }: { children: ReactNode }) {
         brand: { '@type': 'Brand', name: 'Renamerly' },
         offers: {
           '@type': 'Offer',
-          price: '19',
+          price: '9',
           priceCurrency: 'USD',
           url: `${siteUrl}/pricing`,
           availability: 'https://schema.org/InStock',
           category: 'Subscription',
           priceSpecification: {
             '@type': 'UnitPriceSpecification',
-            price: '19',
+            price: '9',
             priceCurrency: 'USD',
             billingIncrement: 1,
             unitCode: 'MON',

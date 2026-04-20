@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Check, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { UpgradeButton } from '@/components/ui/UpgradeButton'
 
 const pricingTiers = [
   {
@@ -23,7 +24,7 @@ const pricingTiers = [
   },
   {
     name: 'Pro',
-    price: '$19',
+    price: '$9',
     priceSubtext: '/month',
     description: 'For professionals who need unlimited power',
     badge: 'Most Popular',
@@ -187,15 +188,21 @@ export default function PricingPage() {
 
               {/* CTA */}
               <div className="relative mt-auto">
-                <Link href={tier.ctaLink} className="block">
-                  <Button
-                    variant={tier.highlighted ? 'primary' : 'secondary'}
-                    size="lg"
-                    className="w-full"
-                  >
+                {tier.highlighted ? (
+                  <UpgradeButton variant="primary" size="lg">
                     {tier.cta}
-                  </Button>
-                </Link>
+                  </UpgradeButton>
+                ) : (
+                  <Link href={tier.ctaLink} className="block">
+                    <Button
+                      variant="secondary"
+                      size="lg"
+                      className="w-full"
+                    >
+                      {tier.cta}
+                    </Button>
+                  </Link>
+                )}
               </div>
             </motion.div>
           ))}

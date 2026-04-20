@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Crown, Zap, TrendingUp, Calendar, CreditCard, ExternalLink, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { UpgradeButton } from '@/components/ui/UpgradeButton'
 
 interface UserProfile {
   subscription_tier: 'free' | 'pro'
@@ -138,7 +139,7 @@ export default function BillingPage() {
             <div>
               <h2 className="text-2xl font-bold">{isPro ? 'Pro Plan' : 'Free Plan'}</h2>
               <p className="text-gray-400">
-                {isPro ? '$19 per month' : 'No credit card required'}
+                {isPro ? '$9 per month' : 'No credit card required'}
               </p>
             </div>
           </div>
@@ -157,14 +158,10 @@ export default function BillingPage() {
               <span>Manage Subscription</span>
             </button>
           ) : (
-            <Link
-              href="/api/stripe/checkout"
-              className="group relative px-6 py-3 bg-gradient-to-r from-treez-purple to-treez-pink rounded-xl font-semibold text-white shadow-lg hover:shadow-treez-purple/50 transition-all duration-300 hover:scale-105 overflow-hidden flex items-center gap-2"
-            >
-              <span className="relative z-10">Upgrade to Pro</span>
-              <Crown className="w-5 h-5 relative z-10" />
-              <div className="absolute inset-0 bg-gradient-to-r from-treez-pink to-treez-purple opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </Link>
+            <UpgradeButton variant="primary" size="md" signInHref="/login?next=/dashboard/billing">
+              Upgrade to Pro
+              <Crown className="w-5 h-5" />
+            </UpgradeButton>
           )}
         </div>
 
