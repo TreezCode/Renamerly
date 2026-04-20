@@ -170,7 +170,7 @@ export function WorkspaceSidebar({ user, isCollapsed, onToggleCollapse }: Worksp
           className={`mb-8 flex items-center group shrink-0 transition-all duration-300
             ${isCollapsed ? 'justify-center px-0' : 'gap-3 px-6'}`}
         >
-          <img src="/brand/logo-icon.webp" alt="Renamerly" className="h-9 w-auto shrink-0" />
+          <img src="/brand/logo-icon.webp" alt="Renamerly" width={435} height={472} className="h-9 w-auto shrink-0" />
           <AnimatePresence initial={false}>
             {!isCollapsed && (
               <motion.div
@@ -180,7 +180,7 @@ export function WorkspaceSidebar({ user, isCollapsed, onToggleCollapse }: Worksp
                 transition={{ duration: 0.2, ease: EASE }}
                 className="overflow-hidden shrink-0"
               >
-                <img src="/brand/logo-name.webp" alt="" aria-hidden="true" className="h-5 w-auto" />
+                <img src="/brand/logo-name.webp" alt="" aria-hidden="true" width={471} height={94} className="h-5 w-auto" />
               </motion.div>
             )}
           </AnimatePresence>
@@ -197,7 +197,7 @@ export function WorkspaceSidebar({ user, isCollapsed, onToggleCollapse }: Worksp
                 transition={{ duration: 0.2, ease: EASE }}
                 className="overflow-hidden"
               >
-                <p className="text-xs font-semibold text-gray-600 uppercase tracking-widest mb-2 px-1">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2 px-1">
                   Session
                 </p>
 
@@ -355,14 +355,14 @@ export function WorkspaceSidebar({ user, isCollapsed, onToggleCollapse }: Worksp
                 transition={{ duration: 0.2, ease: EASE }}
                 className="overflow-hidden"
               >
-                <p className="text-xs font-semibold text-gray-600 uppercase tracking-widest mb-3 px-1">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3 px-1">
                   Stats
                 </p>
                 <div className="space-y-2.5">
                   {/* Image count + progress bar */}
                   <div>
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-gray-500">Images</span>
+                      <span className="text-gray-400">Images</span>
                       <span className={
                         isPro ? 'text-treez-purple' :
                         usagePercent >= 100 ? 'text-error' :
@@ -387,11 +387,11 @@ export function WorkspaceSidebar({ user, isCollapsed, onToggleCollapse }: Worksp
                   </div>
 
                   <div className="flex justify-between text-xs">
-                    <span className="text-gray-500">{vocab.group}s</span>
+                    <span className="text-gray-400">{vocab.group}s</span>
                     <span className="text-gray-300">{uniqueSkus}</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-gray-500">Configured</span>
+                    <span className="text-gray-400">Configured</span>
                     <span className={imagesWithSku === imageCount && imageCount > 0 ? 'text-success' : 'text-gray-300'}>
                       {imagesWithSku} / {imageCount}
                     </span>

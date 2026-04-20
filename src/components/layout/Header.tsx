@@ -84,12 +84,16 @@ export function Header() {
             <img
               src="/brand/logo-icon.webp"
               alt="Renamerly"
+              width={435}
+              height={472}
               className="h-9 w-auto"
             />
             <img
               src="/brand/logo-name.webp"
               alt=""
               aria-hidden="true"
+              width={471}
+              height={94}
               className="h-5 w-auto"
             />
           </Link>

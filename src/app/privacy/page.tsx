@@ -24,8 +24,8 @@ export const metadata: Metadata = {
 // TODO (pre-launch): replace placeholders marked [PLACEHOLDER] with real values
 // and have a lawyer review before public launch.
 const EFFECTIVE_DATE = 'April 19, 2026'
-const CONTACT_EMAIL = '[contact@renamerly.com]'
-const GOVERNING_STATE = '[YOUR STATE]'
+const CONTACT_EMAIL = 'privacy@renamerly.com'
+const GOVERNING_STATE = 'Pennsylvania'
 
 export default function PrivacyPage() {
   return (

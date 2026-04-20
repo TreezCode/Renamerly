@@ -167,7 +167,7 @@ export default function PricingPage() {
 
               {/* Header */}
               <div className="relative text-center mb-8">
-                <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
+                <h2 className="text-2xl font-bold text-white mb-2">{tier.name}</h2>
                 <div className="flex items-baseline justify-center gap-1 mb-2">
                   <span className="text-5xl font-bold text-white">{tier.price}</span>
                   <span className="text-gray-400">{tier.priceSubtext}</span>

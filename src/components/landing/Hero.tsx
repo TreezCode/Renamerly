@@ -108,7 +108,7 @@ export function Hero() {
           </div>
           
           {/* Trust reinforcement */}
-          <p className="text-xs sm:text-sm text-gray-500 px-4">
+          <p className="text-xs sm:text-sm text-gray-400 px-4">
             {landingCopy.hero.reinforcement}
           </p>
         </motion.div>

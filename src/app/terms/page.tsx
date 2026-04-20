@@ -18,8 +18,8 @@ export const metadata: Metadata = {
 
 // TODO (pre-launch): replace placeholders and have a lawyer review.
 const EFFECTIVE_DATE = 'April 19, 2026'
-const CONTACT_EMAIL = '[contact@renamerly.com]'
-const GOVERNING_STATE = '[YOUR STATE]'
+const CONTACT_EMAIL = 'legal@renamerly.com'
+const GOVERNING_STATE = 'Pennsylvania'
 
 export default function TermsPage() {
   return (

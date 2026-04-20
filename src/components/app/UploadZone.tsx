@@ -142,11 +142,11 @@ export function UploadZone() {
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">Drag & drop images here</h3>
             <p className="text-gray-400 mb-1">or click to browse</p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-400">
               Supports JPG, PNG, WebP, GIF, RAW (CR2, NEF, ARW, DNG, etc.)
             </p>
             {!loading && !isPro && (
-              <p className="text-xs text-gray-600 mt-1">Max {maxImages} images · <span className="text-treez-purple cursor-pointer hover:underline" onClick={(e) => { e.stopPropagation(); setShowUpgradeModal(true) }}>Upgrade for unlimited</span></p>
+              <p className="text-xs text-gray-400 mt-1">Max {maxImages} images · <span className="text-treez-purple cursor-pointer hover:underline" onClick={(e) => { e.stopPropagation(); setShowUpgradeModal(true) }}>Upgrade for unlimited</span></p>
             )}
           </div>
         )}

@@ -165,13 +165,8 @@ export default function RootLayout({
       className={`${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <head>
-        <link
-          rel="preload"
-          href="/_next/static/media/0c89a48fa5027cee-s.p.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
+        {/* next/font/google handles font preloading automatically — do not add
+            manual <link rel="preload"> entries, they desync on every build and 404. */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
